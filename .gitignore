@@ -16,5 +16,6 @@ pom.xml.asc
 /config/**/*.pub
 /node_modules
 /resources/public/dist/
-/logs/
+/var/data/
+/var/logs/
 /.cljs_rhino_repl
