@@ -72,7 +72,6 @@
           :optimizations :advanced
           :externs [
             "externs/js-joda.js"
-            "externs/jquery-3.1.js"
             "externs/datepicker.js"
             "externs/selectize.js"]
           ;:pseudo-names true
