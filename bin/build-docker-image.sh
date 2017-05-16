@@ -2,7 +2,7 @@
 
 TAG=${1:-latest}
 
-FULL_TAG=infi/alibi:$TAG
+FULL_TAG=infi/timi:$TAG
 
 echo Building $FULL_TAG
 
