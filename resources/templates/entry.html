@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "templates/layout.html" %}
 {% block body %} 
 <input type="hidden" id="view-data" value="{{view-data}}" />
 <div class="row row-entry-form">
@@ -10,7 +10,7 @@
   </div>
 </div>
 <div class="row day-entry-table-row" id="day-entry-table">
-{% include "day-entries-table.html" %}
+{% include "templates/day-entries-table.html" %}
 </div>
 {% endblock %}
 

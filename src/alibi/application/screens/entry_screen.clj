@@ -175,7 +175,7 @@
     {:template-data
      (assoc (view-data client-state)
             :identity (:identity client-state))
-     :selmer-template "entry.html"}))
+     :selmer-template "templates/entry.html"}))
 
 (defn get-page
   [for-date {{selected-task-id "selected-task-id"} :params :as request}]
@@ -200,7 +200,7 @@
   [{{for-date "for-date"} :params identity :identity}]
   {:pre [(str->local-date for-date)]}
   (let [data (entries-for-day (str->local-date for-date) (get identity :id))]
-    (-> {:selmer-template "day-entries-table.html"}
+    (-> {:selmer-template "templates/day-entries-table.html"}
         (assoc :template-data {:entries-for-day data})
         (response/response))))
 
