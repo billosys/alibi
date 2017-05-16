@@ -45,28 +45,34 @@ The prerequisites for this route are:
 - Make sure [leiningen](https://leiningen.org/) is installed.
 - Have npm installed
 
-Clone the repo. Then, inside the repo, create a sqlite db:
+#### Initialization
+
+Clone the repo. Then, inside the repo, initialize a time tracker:
 
 ```
-lein run sqlite create-db :filename "timi.db"
+$ lein timi-init "var/data/timi.db"
 ```
 
-This will create a sqlite3 db with filename `timi.db`, which contains the right schema, but has no data. Before we create some data, you first need to setup a config file, and for that you need to create a key for cookie encryption, e.g. using:
+This will create a sqlite3 db with filename `var/data/timi.db`, which contains the right schema, but has no data.
+
+#### Configuration
+
+Before we create some data, you first need to setup a config file, and for that you need to create a key for cookie encryption, e.g. using:
 
 ```
-openssl rand -base64 12
+$ openssl rand -base64 12
 ```
 
 Then execute the following to create a config file, replacing the `:cookie-encryption-key` value with your own key and `[:sqlite :subname]` with the database file you picked in a previous step.
 
 ```
-cat << EOF > config/local/config.edn
+$ cat << EOF > config/local/config.edn
 {:cookie-encryption-key "xxxxxxxxxxxxxxxx"
  :selmer-caching? false
 
  :persistence :sqlite
  :persistence-strategies {}
- :sqlite {:subprotocol "sqlite" :subname "timi.db"}
+ :sqlite {:subprotocol "sqlite" :subname "var/data/timi.db"}
 
  :authentication :single-user
  :single-user {:username "me!"}}
@@ -75,30 +81,47 @@ EOF
 
 Have a look at `config/config.edn` for more config options, including how to use OpenID Connect for authentication.
 
-Now we can populate the database with some projects and tasks:
+#### Projects Population
+
+Now we can populate the database with some projects and tasks. Here's how you create
+a project:
 
 ```
-lein with-profile local run projects create :name "Tími" :billing-method :hourly
-# => Will return an id for the newly created project, use that for "1" in the following steps
-lein with-profile local run tasks create :name "Project management" :for-project 1 :billing-method :overhead
-lein with-profile local run tasks create :name "Programming" :for-project 1
+$ lein timi-create-project "Tími" :billing-method :hourly
 ```
+```clj
+Creating new project:
+{:project-name "Tími", :billing-method :hourly}
+Done. Id for project is 1
+```
+
+The project ID that is returned is what you will use when creating tasks for that
+project. For example:
+
+```
+$ lein timi-create-task "Project management" :for-project 1 :billing-method :overhead
+$ lein timi-create-task "Programming" :for-project 1
+```
+
+#### Client Preparation
 
 Install client dependencies
 ```
-npm install && ./node_modules/.bin/grunt copy
+$ npm install && ./node_modules/.bin/grunt copy
 ```
 
 Compile the ClojureScript:
 
 ```
-lein cljsbuild once
+$ lein cljsbuild once
 ```
+
+#### Startup
 
 Run the server:
 
 ```
-lein with-profile local ring server-headless
+$ lein timi-run
 ```
 
 If everything went well, there should now be a web server running on http://localhost:3000. Navigate to it and have fun!
@@ -108,15 +131,15 @@ If everything went well, there should now be a web server running on http://loca
 You can run Tími in a Docker:
 
 ```
-docker build . -t infi/timi
+$ docker build . -t infi/timi
 
 # Create project "Tími" with one regular and one overhead-task
-docker run -v /local/path/to/data:/opt/timi/data infi/timi app:projects create :name "Tími" :billing-method :hourly # returns <id>
-docker run -v /local/path/to/data:/opt/timi/data infi/timi app:tasks create :name "MyTask" :for-project <id>
-docker run -v /local/path/to/data:/opt/timi/data infi/timi app:tasks create :name "MyOverheadTask" :for-project <id> :billing-method :overhead
+$ docker run -v /local/path/to/data:/opt/timi/data infi/timi app:projects create :name "Tími" :billing-method :hourly # returns <id>
+$ docker run -v /local/path/to/data:/opt/timi/data infi/timi app:tasks create :name "MyTask" :for-project <id>
+$ docker run -v /local/path/to/data:/opt/timi/data infi/timi app:tasks create :name "MyOverheadTask" :for-project <id> :billing-method :overhead
 
 # Run the application
-docker run -v /local/path/to/data:/opt/timi/data -p 3500:3000 infi/timi
+$ docker run -v /local/path/to/data:/opt/timi/data -p 3500:3000 infi/timi
 ```
 
 Tími should now be running at http://localhost:3500.
@@ -128,7 +151,7 @@ This project uses a lot of open source tooling, which I am grateful for. In no p
 * Clojure(Script)
 * ring
 * compojure
-* celmer
+* Selmer
 * clj-time
 * bouncer
 * MySQL
@@ -152,5 +175,7 @@ If you find your project in the source, but isn't listed: I'm sorry! Please drop
 ## License
 
 Copyright © 2017 Infi Holding B.V. and contributers.
+
+Copyright © 2017 Billo Systems, Ltd. Co.
 
 Distributed under the Mozilla Public License Version 2.0

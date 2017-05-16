@@ -40,7 +40,7 @@
   :cljsbuild {
     :builds
       [{:id "dev"
-        :source-paths ["src/frontend/cljs"]
+        :source-paths ["src/cljs"]
         :figwheel {}
         :compiler {
           :main timi.core
@@ -51,7 +51,7 @@
           :language-in :ecmascript5
           :preloads [devtools.preload]}}
        {:id "single-file"
-        :source-paths ["src/frontend/cljs"]
+        :source-paths ["src/cljs"]
         :compiler {
           :output-to "resources/public/dist/cljs/timi.js"
           :main timi.core
@@ -60,7 +60,7 @@
           :language-in :ecmascript5
           :pretty-print true}}
        {:id "min"
-        :source-paths ["src/frontend/cljs"]
+        :source-paths ["src/cljs"]
         :compiler {
           :output-to "resources/public/dist/cljs/timi.js"
           :main timi.core
@@ -74,11 +74,10 @@
           :verbose true
           :language-in :ecmascript5
           :pretty-print false}}]}
-
   :figwheel {
     :server-port 5076
     :css-dirs ["resources/public/res/css"]
-    :server-logfile "logs/figwheel.log"}
+    :server-logfile "var/logs/figwheel.log"}
   :profiles {
     :dev [{
       :dependencies [
@@ -92,7 +91,10 @@
         [org.omcljs/om "0.9.0"
          :exclusions [cljsjs/react]]
         [ring/ring-mock "0.3.0"]]
-      :source-paths ["src" "dev" "src/frontend/cljs"]
+      :source-paths [
+        "src/clj"
+        "src/cljs"
+        "dev-resources/src"]
       :repl-options {
         :init (set! *print-length* 50)
         :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
@@ -111,4 +113,9 @@
            :custom-persistence]
     :prod [{:resource-paths ["config/prod"]}
            :custom-persistence]
-    :custom-persistence {}})
+    :custom-persistence {}}
+  :aliases {
+    "timi-init" ["run" "sqlite" "create-db" :filename]
+    "timi-create-project" ["with-profile" "+local" "run" "projects" "create" :name]
+    "timi-create-task" ["with-profile" "+local" "run" "tasks" "create" :name]
+    "timi-run" ["with-profile" "+local" "ring" "server-headless"]})
