@@ -1,4 +1,4 @@
-# Alibi Time Tracker
+# Tími
 
 A time tracker for developers, written in Clojure.
 
