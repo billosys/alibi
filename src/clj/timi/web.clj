@@ -1,20 +1,18 @@
 (ns timi.web
-  (:require [selmer.parser :as selmer]
-            [compojure.core :refer [defroutes GET POST]]
-            [ring.util.response :as response]
-            [timi.application.screens.entry-screen
-             :as entry-screen]
-            [ring.util.mime-type :as mime]
-            [ring.middleware.params :as params]
-            [ring.middleware.session :as session]
-            [timi.application.authn-authz
-             :refer [wrap-authn-and-authz]]
-            [timi.application.timi-identity
-             :refer [wrap-augment-identity]]
-            [ring.middleware.session.cookie :as cookie-session]
-            [timi.infra.date-time
-             :refer [today format-date str->local-date]]
-            [timi.config :refer [read-config]]))
+  (:require
+    [compojure.core :refer [defroutes GET POST]]
+    [ring.middleware.params :as params]
+    [ring.middleware.session :as session]
+    [ring.middleware.session.cookie :as cookie-session]
+    [ring.middleware.webjars :refer [wrap-webjars]]
+    [ring.util.mime-type :as mime]
+    [ring.util.response :as response]
+    [selmer.parser :as selmer]
+    [timi.application.authn-authz :refer [wrap-authn-and-authz]]
+    [timi.application.screens.entry-screen :as entry-screen]
+    [timi.application.timi-identity :refer [wrap-augment-identity]]
+    [timi.config :refer [read-config]]
+    [timi.infra.date-time :refer [today format-date str->local-date]]))
 
 (def config (read-config))
 
@@ -91,4 +89,5 @@
       (wrap-no-cache)
       (wrap-default-responses)
       (wrap-selmer)
-      (wrap-persistence)))
+      (wrap-persistence)
+      (wrap-webjars)))
