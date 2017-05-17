@@ -1,21 +1,21 @@
 (ns timi.application.screens.entry-screen
   (:require
-    [timi.domain.task :refer [project-id-for-task-id]]
-    [timi.domain.entry-app-svc :as svc]
     [bouncer.core :refer [validate]]
     [bouncer.validators :as v :refer [defvalidator]]
+    [clojure.data.json :as json]
     [clojure.set :refer [rename-keys]]
-    [ring.util.response :as response]
     [clojure.walk :refer [keywordize-keys]]
-    [timi.types :refer [str->int]]
+    [ring.util.response :as response]
+    [timi.domain.entry-app-svc :as svc]
     [timi.domain.query-handler :as queries]
+    [timi.domain.task :refer [project-id-for-task-id]]
     [timi.infra.date-time :refer [format-date
-                                                plus
-                                                today
-                                                local-date?
-                                                str->local-date
-                                                str->local-time]]
-    [clojure.data.json :as json]))
+                                  plus
+                                  today
+                                  local-date?
+                                  str->local-date
+                                  str->local-time]]
+    [timi.util :refer [str->int]]))
 
 (defn- entries-for-day
   [for-date user-id]
@@ -172,9 +172,8 @@
 (defn render
   [client-state]
   (response/response
-    {:template-data
-     (assoc (view-data client-state)
-            :identity (:identity client-state))
+    {:template-data (assoc (view-data client-state)
+                           :identity (:identity client-state))
      :selmer-template "templates/entry.html"}))
 
 (defn get-page

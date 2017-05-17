@@ -1,15 +1,16 @@
-<div class="navbar navbar-default navbar-static-top">
+<div class="navbar navbar-inverse navbar-static-top">
   <div class="container">
     <div class="row">
       <div class="col-md-2">
         <ul class="nav navbar-nav">
-          <li {% ifequal active "entry" %}class="active"{% endifequal %}><a href="/entry">Entry</a></li>
+          <li {% ifequal active "projects" %}class="active"{% endifequal %}><a href="/projects">Projects</a></li>
+          <li {% ifequal active "entry" %}class="active"{% endifequal %}><a href="/entry">Time</a></li>
         </ul>
       </div>
       <div class="col-md-8" id="post-new-entry-bar-container">
       </div>
       <div class="col-md-2">
-        <p class="navbar-text pull-right">Logged in as  <strong>{{identity.username}}</strong></p>
+        <p class="navbar-text pull-right">Logged in as <strong>{{identity.username}}</strong></p>
       </div>
     </div>
   </div>
