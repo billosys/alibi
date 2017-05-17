@@ -83,8 +83,6 @@
     :css-dirs ["resources/public/res/css"]
     :server-logfile "var/logs/figwheel.log"}
   :profiles {
-    :uberjar {
-      :aot :all}
     :dev [{
       :dependencies [
         [binaryage/devtools "0.8.2"]
