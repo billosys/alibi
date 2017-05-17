@@ -1,7 +1,7 @@
 (ns timi.domain.queries.entry-screen.activity-graphic-test
   (:require
     [timi.test-helpers :refer [deftest copy-tests]]
-    [timi.db-tools :as db-tools]
+    [timi.datasource.tools :as db-tools]
     [clojure.test :refer [is testing]]
     [timi.domain.query-handler :refer [handle]]
     [clojure.pprint :refer [pprint]]

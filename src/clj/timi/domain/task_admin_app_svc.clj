@@ -1,7 +1,7 @@
 (ns timi.domain.task-admin-app-svc
   (:require
-    [timi.domain.task :as task]
-    [timi.domain.project :as project]))
+    [timi.domain.project :as project]
+    [timi.domain.task :as task]))
 
 (defn new-task!
   [{:keys [for-project-id] :as cmd}]

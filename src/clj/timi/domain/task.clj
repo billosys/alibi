@@ -1,8 +1,8 @@
 (ns timi.domain.task
   (:refer-clojure :exclude [get])
   (:require
-    [timi.domain.billing-method :refer [billing-method?]]
-    [clojure.set :refer [rename-keys]]))
+    [clojure.set :refer [rename-keys]]
+    [timi.domain.billing-method :refer [billing-method?]]))
 
 (defrecord Task [task-id billing-method name project-id])
 

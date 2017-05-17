@@ -1,4 +1,4 @@
-(ns timi.entry-page
+(ns timi.time-page
   (:require
     [timi.logging :refer [log log-cljs]]
     [timi.post-new-entry-bar :as post-new-entry-bar]
@@ -9,7 +9,7 @@
     [cljs.reader]
     [om.core :as om]
     [om.dom :as dom]
-    [timi.entry-page-state :as state]
+    [timi.time-page-state :as state]
     [timi.actions :as actions]))
 
 (defonce state (atom state/initial-state))

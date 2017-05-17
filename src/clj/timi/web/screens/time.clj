@@ -1,4 +1,4 @@
-(ns timi.application.screens.entry-screen
+(ns timi.web.screens.time
   (:require
     [bouncer.core :refer [validate]]
     [bouncer.validators :as v :refer [defvalidator]]
@@ -134,7 +134,8 @@
       (rename-keys {:selected-task-id :task-id
                     :selected-project-id :project-id})))
 
-(defn- update-entry! [cs]
+(defn- update-entry!
+  [cs]
   (svc/update-entry!
     {:as-identity (get-in cs [:identity :id])
      :entry-id (:entry-id cs)
@@ -144,37 +145,39 @@
      :task-id (:selected-task-id cs)
      :billable? (:billable? cs)
      :comment (:comment cs)})
-  (response/redirect (str "/entry/" (:for-date cs))))
+  (response/redirect (str "/time/" (:for-date cs))))
 
-(defn- post-new-entry! [client-state]
+(defn- post-new-entry!
+  [client-state]
   (svc/post-new-entry! (client-state->new-entry-cmd client-state))
-  (response/redirect (str "/entry/"
+  (response/redirect (str "/time/"
                           (:for-date client-state)
                           "?selected-task-id="
                           (:selected-task-id client-state))))
 
-(defn- delete-entry! [client-state]
+(defn- delete-entry!
+  [client-state]
   (svc/delete-entry! {:entry-id (:entry-id client-state)
                       :as-identity (get-in client-state [:identity :id])})
-  (response/redirect (str "/entry/" (:for-date client-state))))
+  (response/redirect (str "/time/" (:for-date client-state))))
 
 (defn post
   [request]
   (let [client-state (build-client-state-from-post request)]
     (cond
       (and (:entry-id client-state) (find client-state :delete-entry))
-      (delete-entry! client-state)
-
-      (:entry-id client-state) (update-entry! client-state)
-
-      :else (post-new-entry! client-state))))
+        (delete-entry! client-state)
+      (:entry-id client-state)
+        (update-entry! client-state)
+      :else
+        (post-new-entry! client-state))))
 
 (defn render
   [client-state]
   (response/response
     {:template-data (assoc (view-data client-state)
                            :identity (:identity client-state))
-     :selmer-template "templates/entry.html"}))
+     :selmer-template "templates/time.html"}))
 
 (defn get-page
   [for-date {{selected-task-id "selected-task-id"} :params :as request}]
@@ -189,11 +192,10 @@
   (let [data (queries/handle :entry-screen/activity-graphic
                              :user-id (get-in request [:identity :id])
                              :from (str->local-date from))]
-    (->
-      data
-      (json/write-str)
-      (response/response)
-      (response/content-type "application/json"))))
+    (-> data
+        (json/write-str)
+        (response/response)
+        (response/content-type "application/json"))))
 
 (defn day-entries-table
   [{{for-date "for-date"} :params identity :identity}]
@@ -202,4 +204,3 @@
     (-> {:selmer-template "templates/day-entries-table.html"}
         (assoc :template-data {:entries-for-day data})
         (response/response))))
-

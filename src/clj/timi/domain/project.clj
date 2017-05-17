@@ -1,8 +1,8 @@
 (ns timi.domain.project
   (:refer-clojure :exclude [get])
   (:require
-    [timi.domain.billing-method :refer [billing-method?]]
-    [clojure.set :refer [rename-keys]]))
+    [clojure.set :refer [rename-keys]]
+    [timi.domain.billing-method :refer [billing-method?]]))
 
 (defrecord Project [project-id project-name billing-method])
 

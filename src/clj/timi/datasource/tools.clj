@@ -1,10 +1,7 @@
-(ns timi.db-tools
+(ns timi.datasource.tools
   (:require
-    [timi.domain.task :as task]
-    [timi.domain.entry :as entry]
     [timi.infra.date-time
-     :refer [today ->local-time]]
-    [timi.domain.project :as project]))
+     :refer [today ->local-time]]))
 
 (def ^:dynamic *impl* nil)
 

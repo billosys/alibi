@@ -11,7 +11,10 @@
 ; we can't use DateTimeZone/getDefault because we change that later and there
 ; is no method to get the system timezone
 (def mysql-timezone (DateTimeZone/forID (get-jvm-timezone)))
-(def db-timezone (time/time-zone-for-id "Europe/Amsterdam"))
+;; XXX The next line was originally the Netherlands timezone; some parts of the
+;;     app are using the stored timezone without converting to localtime; that
+;;     needs to be fixed; this was just a lazy not-fix.
+(def db-timezone (time/time-zone-for-id "America/Chicago"))
 
 (DateTimeZone/setDefault db-timezone)
 

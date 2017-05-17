@@ -1,7 +1,7 @@
 (ns timi.domain.task-repository-test
   (:require
     [clojure.test :refer [is testing]]
-    [timi.db-tools :as setup]
+    [timi.datasource.tools :as setup]
     [timi.test-helpers :refer [deftest copy-tests]]
     [timi.domain.task :as task]))
 

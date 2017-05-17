@@ -1,6 +1,6 @@
 (ns timi.domain.queries.entry-screen.entries-for-day-test
   (:require [timi.domain.query-handler :refer [handle]]
-            [timi.db-tools :as db-tools]
+            [timi.datasource.tools :as db-tools]
             [clojure.test :refer [is]]
             [timi.config :refer [config]]
             [timi.test-helpers :refer [is-equal]]

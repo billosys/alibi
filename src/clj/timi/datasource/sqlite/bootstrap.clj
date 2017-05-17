@@ -1,15 +1,15 @@
 (ns timi.datasource.sqlite.bootstrap
   (:require
-    [timi.domain.query-handler :as queries]
-    [timi.domain.user :as user-repo]
     [timi.datasource.sqlite.entry-repo :as sqlite-entry-repo]
-    [timi.datasource.sqlite.task-repo :as sqlite-task-repo]
     [timi.datasource.sqlite.project-repo :as sqlite-project-repo]
     [timi.datasource.sqlite.queries :as sqlite-queries]
-    [timi.application.timi-identity :as identity]
+    [timi.datasource.sqlite.task-repo :as sqlite-task-repo]
+    [timi.domain.entry :as entry]
     [timi.domain.project :as project]
+    [timi.domain.query-handler :as queries]
     [timi.domain.task :as task]
-    [timi.domain.entry :as entry]))
+    [timi.domain.user :as user-repo]
+    [timi.identity.core :as identity]))
 
 (def user-repo
   (reify

@@ -2,7 +2,7 @@
   (:require [timi.domain.project-admin-app-svc
              :as projects :refer [new-project!]]
             [clojure.test :refer [is testing]]
-            [timi.db-tools :as db-tools]
+            [timi.datasource.tools :as db-tools]
             [timi.config :refer [config]]
             [timi.test-helpers :refer [deftest copy-tests]]
             [timi.domain.project :as project]))

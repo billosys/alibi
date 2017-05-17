@@ -1,4 +1,4 @@
-(ns timi.application.screens.projects-screen
+(ns timi.web.screens.projects
   (:require
     [ring.util.response :as response]
     [timi.domain.task :refer [project-id-for-task-id]]

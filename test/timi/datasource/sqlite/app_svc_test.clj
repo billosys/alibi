@@ -7,7 +7,7 @@
     [timi.domain.task-admin-app-svc-test :as task-admin]
     [timi.domain.task-repository-test :as task-repo]
     [timi.config :refer [config]]
-    [timi.db-tools :as db-tools]
+    [timi.datasource.tools :as db-tools]
     [timi.domain.queries.entry-screen.entries-for-day-test]
     [timi.domain.queries.entry-screen.list-all-bookable-projects-and-tasks-test]
     [timi.domain.queries.entry-screen.activity-graphic-test]

@@ -7,7 +7,7 @@
     [timi.domain.entry :as entry]
     [timi.domain.user :as user-repo]
     [timi.infra.date-time :refer [->local-date ->local-time]]
-    [timi.db-tools :as db-tools]
+    [timi.datasource.tools :as db-tools]
     [timi.datasource.sqlite.db-tools :refer [sqlite-db-tools
                                                            sqlite-user-repo]]))
 

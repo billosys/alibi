@@ -3,7 +3,7 @@
     [timi.domain.query-handler
      :refer [with-handler handle]]
     [clojure.test :refer [is testing]]
-    [timi.db-tools :as setup]
+    [timi.datasource.tools :as setup]
     [timi.test-helpers :refer [deftest copy-tests]]))
 
 (defn list-all-bookable-projects-and-tasks []

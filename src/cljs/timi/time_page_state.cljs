@@ -1,4 +1,4 @@
-(ns timi.entry-page-state
+(ns timi.time-page-state
   (:require
    [cljs.reader]
    [clojure.data]

@@ -7,7 +7,7 @@
     [goog.string.format]
     [om.core :as om]
     [om.dom :as dom]
-    [timi.entry-page-state :as state]))
+    [timi.time-page-state :as state]))
 
 (defn parse-float [v]
   (js/parseFloat v))

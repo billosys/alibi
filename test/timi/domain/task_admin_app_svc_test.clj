@@ -2,7 +2,7 @@
   (:require
     [timi.domain.task-admin-app-svc :as tasks]
     [clojure.test :refer [is testing]]
-    [timi.db-tools :as db-tools]
+    [timi.datasource.tools :as db-tools]
     [timi.test-helpers :refer [deftest copy-tests]]
     [timi.domain.task :as task]))
 

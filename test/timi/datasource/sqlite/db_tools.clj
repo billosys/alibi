@@ -1,6 +1,6 @@
 (ns timi.datasource.sqlite.db-tools
   (:require
-    [timi.db-tools :as db-tools]
+    [timi.datasource.tools :as db-tools]
     [timi.domain.project :as project]
     [timi.domain.task :as task]
     [timi.domain.entry :as entry]

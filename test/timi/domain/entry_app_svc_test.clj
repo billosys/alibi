@@ -1,16 +1,16 @@
 (ns timi.domain.entry-app-svc-test
   (:require
+    [clojure.set :refer [rename-keys difference]]
     [clojure.test :refer [testing is use-fixtures]]
+    [timi.datasource.tools :as db-tools]
+    [timi.domain.entry :as entry]
     [timi.domain.entry-app-svc :as svc]
-    [timi.db-tools :as db-tools]
     [timi.infra.date-time :refer [->local-time
                                    ->local-date
                                    today
                                    date-equal?
                                    time-equal?]]
-    [clojure.set :refer [rename-keys difference]]
-    [timi.test-helpers :refer [copy-tests deftest]]
-    [timi.domain.entry :as entry]))
+    [timi.test-helpers :refer [copy-tests deftest]]))
 
 (declare post-ts-entry-and-assert make-valid-command is-invalid-cmd
          is-valid-cmd test-post-billable?-values update-ts-entry-and-assert

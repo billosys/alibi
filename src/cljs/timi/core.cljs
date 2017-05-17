@@ -3,6 +3,6 @@
             [timi.post-entry-form]
             [timi.post-new-entry-bar]
             [timi.day-entry-table]
-            [timi.entry-page]
+            [timi.time-page]
             [om.core :as om]
             [om.dom :as dom]))

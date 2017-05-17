@@ -7,7 +7,7 @@
     [om.core :as om]
     [om.dom :as dom]
     [timi.actions :as actions]
-    [timi.entry-page-state :as state
+    [timi.time-page-state :as state
      :refer []]))
 
 (defn parse-float [v] (js/parseFloat v))
@@ -130,7 +130,7 @@
                       {:input-name "for-date"
                        :selected-date (state/form-selected-date form)
                        :onChangeDate #(dispatch!
-                                        (actions/entry-page-change-date %))}))
+                                        (actions/time-page-change-date %))}))
           " "
           (dom/div
             #js {:className (str "form-group"
@@ -228,7 +228,7 @@
   [dispatch! form]
   (dom/form
     #js {:method "post"
-         :action (str "/entry/" (state/form-selected-date form))
+         :action (str "/time/" (state/form-selected-date form))
          :className "form-horizontal entry-form"
          :onSubmit (partial on-form-submit form
                             #(dispatch! {:action :entry-form-show-errors

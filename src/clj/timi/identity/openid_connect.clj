@@ -1,16 +1,15 @@
-(ns timi.application.openid-connect
+(ns timi.identity.openid-connect
   (:require
+    [buddy.auth.backends :as backends]
+    [buddy.core.keys :as keys]
+    [buddy.sign.jwt :as jwt]
     [clj-http.client :as client]
     [clojure.data.json :as json]
-    [buddy.core.keys :as keys]
     [clojure.java.io :refer [resource]]
-    [buddy.sign.jwt :as jwt]
-    [timi.infra.date-time :as date-time]
-    [ring.util.response :refer [response response? redirect status] :as response]
     [crypto.random :refer [base64]]
     [ring.util.codec :refer [form-encode]]
-    [buddy.auth.backends :as backends]
-    ))
+    [ring.util.response :refer [response response? redirect status] :as response]
+    [timi.infra.date-time :as date-time]))
 
 (def time-tolerance [60 :seconds])
 

@@ -1,20 +1,23 @@
-(ns timi.application.timi-identity
+(ns timi.identity.core
   (:require
     [buddy.auth :refer [authenticated?]]))
 
 (def ^:dynamic ^:private *impl* nil)
 
-(defmacro with-impl [impl & body]
+(defmacro with-impl
+  [impl & body]
   `(binding [*impl* ~impl]
      ~@body))
 
 (defprotocol Identity
   (-user-id-for-username [_ username]))
 
-(defn- user-id-for-username [username]
+(defn- user-id-for-username
+  [username]
   (-user-id-for-username *impl* username))
 
-(defn wrap-augment-identity [handler]
+(defn wrap-augment-identity
+  [handler]
   (fn [request]
     (handler
       (if (authenticated? request)

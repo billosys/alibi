@@ -1,11 +1,10 @@
 (ns timi.domain.entry
   (:require
-    [timi.infra.date-time
-     :refer [local-time? before? local-date?]]
-    [timi.domain.task :refer [task?]]
-    [timi.domain.project :refer [project?]]
+    [clojure.set :refer [rename-keys]]
     [timi.domain.billing-method :as billing-method]
-    [clojure.set :refer [rename-keys]]))
+    [timi.domain.project :refer [project?]]
+    [timi.domain.task :refer [task?]]
+    [timi.infra.date-time :refer [local-time? before? local-date?]]))
 
 (defn- valid-time-interval? [{:keys [start-time end-time]}]
   (and

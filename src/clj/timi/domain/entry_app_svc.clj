@@ -1,11 +1,10 @@
 (ns timi.domain.entry-app-svc
   (:require
-    [timi.domain.user :as user-repo]
     [timi.domain.entry :as entry]
-    [timi.infra.date-time :refer [local-time? before?
-                                   local-date?]]
     [timi.domain.project :as project]
-    [timi.domain.task :as task]))
+    [timi.domain.task :as task]
+    [timi.domain.user :as user-repo]
+    [timi.infra.date-time :refer [local-time? before? local-date?]]))
 
 (defn- valid-task? [task-id]
   (and

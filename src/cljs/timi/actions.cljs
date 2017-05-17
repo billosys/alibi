@@ -1,7 +1,7 @@
 (ns timi.actions
   (:require
     [timi.activity-graphic-data-source :as ag-ds]
-    [timi.entry-page-state :as state]
+    [timi.time-page-state :as state]
     [time.core :as time]))
 
 (defn change-view-period [for-date data]
@@ -29,4 +29,4 @@
          :on-fetched #(do (dispatch! (entries-load-cache monday-before %))
                           (dispatch! (change-view-period date-str %)))}))))
 
-(def entry-page-change-date entries-load-data)
+(def time-page-change-date entries-load-data)
