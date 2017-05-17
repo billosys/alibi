@@ -1,25 +1,12 @@
 (ns timi.cli
   (:require
-    [timi.domain.project-admin-app-svc :as projects]
-    [timi.domain.task-admin-app-svc :as tasks]
     [clojure.pprint :refer [pprint]]
     [timi.datasource.sqlite.migrations :refer [apply-migrations!]]
     [timi.domain.billing-method :refer [billing-method?]]
-    [timi.domain.project :as project]))
-
-(defn str->decimal [dec-str]
-  (when dec-str
-    (try
-      (BigDecimal. dec-str)
-      (catch NumberFormatException e nil))))
-
-(defn str->keyword [keyword-str]
-  (when (seq keyword-str)
-    (keyword (subs keyword-str 1))))
-
-(defn str->int [int-str]
-  (when int-str
-    (try (Integer. int-str) (catch NumberFormatException e nil))))
+    [timi.domain.project :as project]
+    [timi.domain.project-admin-app-svc :as projects]
+    [timi.domain.task-admin-app-svc :as tasks]
+    [timi.util :refer [str->decimal str->int str->keyword]]))
 
 (defn args->map [args]
   (into {} (map (fn [[k v]] [(str->keyword k) v]) (partition 2 args))))
