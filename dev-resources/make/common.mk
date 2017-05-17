@@ -1,4 +1,12 @@
-build: build-cljs build-clj
+DB_FILE = var/data/timi.db
+
+build: $(DB_FILE) build-cljs build-clj
+
+$(DB_FILE):
+	@lein timi-init $(DB_FILE)
+
+cookie:
+	@openssl rand -base64 12 2>/dev/null
 
 run:
 	@lein timi-run
@@ -6,3 +14,8 @@ run:
 clean: clean-cljs clean-clj
 
 clean-all: clean clean-node
+
+heading:
+	@make bar
+	@echo
+	@make bar
