@@ -1,4 +1,4 @@
-JS_DIR = dev-resources/js
+JS_DIR = ./resources/js
 NODE_MODS = ./node_modules
 NODE_MODS_PATH = $(JS_DIR)/$(NODE_MODS)
 CLJS_INSTALL_DIR = ./resources/public/dist
