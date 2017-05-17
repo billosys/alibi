@@ -168,9 +168,8 @@
       "Comment:")
     (dom/div
       #js {:className "col-md-10"}
-      (dom/input
-        #js {:type "text"
-             :name "comment"
+      (dom/textarea
+        #js {:name "comment"
              :value (state/form-comment form)
              :onChange #(dispatch! {:action :change-comment
                                     :comment (.. % -target -value)})
@@ -229,7 +228,7 @@
   (dom/form
     #js {:method "post"
          :action (str "/time/" (state/form-selected-date form))
-         :className "form-horizontal entry-form"
+         :className "entry-form"
          :onSubmit (partial on-form-submit form
                             #(dispatch! {:action :entry-form-show-errors
                                          :form %}))}
@@ -238,7 +237,7 @@
                         " "
                         [(when (summary-errors form) "has-errors")
                          (when (seq (state/form-selected-task form))
-                           "entry-form-visible")])
+                           "entry-form-visible well")])
            :id "entry-form-container"}
       (dom/input #js {:type "hidden" :name "selected-project-id"
                       :value (or (state/form-selected-project-id form) "")})

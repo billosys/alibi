@@ -1,35 +1,38 @@
 .navbar-brand {
   font-family: 'Cormorant Garamond', serif;
+  font-size: 225%;
 }
 
 .form-inline .time-entry-input {
-    width: 70px;
 }
 
 .input-group-datepicker {
-    width: 150px;
 }
 
 .form-group-inline {
-    float: left;
-    margin-right: 15px;
+  float: left;
+  margin-right: 15px;
 }
 
 .form-group-inline:last-child {
-    margin-right: 0px;
+  margin-right: 0px;
 }
 
 .form-group-inline .help-block {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-#activity-graphic row {
-  /*background-color: #d3d3cf;*/
-    /*background-color: #f8f8f8;*/
+.activity-graphic-row {
+  margin: 1px;
+  color: white;
+  fill: white;
+}
+
+.activity-graphic-row a:link, .activity-graphic-row a:hover {
+  color: white;
 }
 
 #activity-svg-container svg {
-  background-color: #8896a4;
 }
 
 .selected-date-highlight {
@@ -42,6 +45,7 @@
 }
 
 .time-line {
+  color: #f00;
 }
 
 .time-line.day-summary {
@@ -82,55 +86,55 @@
 }
 
 .project-heading {
-    font-size: 10pt;
-    fill: inherit;
+  font-size: 10pt;
+  fill: inherit;
 }
 
 .grid-day-separator {
-    /*stroke: #e7e7e7;*/
-    stroke: inherit;
-    stroke-width: 0.5;
+  /*stroke: #e7e7e7;*/
+  stroke: inherit;
+  stroke-width: 0.5;
 }
 
 .grid-time-label {
-    font-size: 8pt;
-    fill: inherit;
+  font-size: 8pt;
+  fill: inherit;
 }
 
 .grid-day-label {
-    fill: inherit;
-    font-size: 14px;
+  fill: inherit;
+  font-size: 14px;
 }
 
 .grid-day-label:hover {
-    text-decoration: underline;
-    cursor: pointer;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .grid-day-label-is-selected {
-    text-decoration: underline;
-    font-size:16px;
+  text-decoration: underline;
+  font-size:16px;
 }
 
 .day-summary-label {
-    fill: inherit;
-    font-size: 8pt;
+  fill: inherit;
+  font-size: 8pt;
 }
 
 .time-line.day-complete-complete {
-    stroke: green;
+  stroke: #5cb85c;
 }
 
 .day-summary-label .day-complete-complete {
-    fill: green;
+  fill: #5cb85c;
 }
 
 .time-line.day-complete-not-complete {
-    stroke: inherit;
+  stroke: inherit;
 }
 
 .day-summary-label .day-complete-not-complete {
-    fill: inherit;
+  fill: inherit;
 }
 
 .hour-entry-active {
@@ -143,7 +147,7 @@
 }
 
 .row-entry-form {
-    margin-bottom: 0px;
+    margin: 1px;
 }
 
 #entry-form-container {
@@ -153,7 +157,7 @@
 }
 
 #entry-form-container.entry-form-visible {
-  max-height: 250px;
+  max-height: 300px;
 }
 
 #entry-form-container.has-errors {
@@ -161,42 +165,41 @@
 }
 
 .navbar-form-post-new-entry-bar {
-    padding-left: 0px;
-    padding-right: 0px;
-    margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-bottom: 0px;
 }
 
 .form-inline-no-horz-margin .form-group {
-    margin-left: 0px;
-    margin-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .entry-form .form-inline .help-block {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .entry-form .form-group {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .entry-form .help-block {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .entry-form.form-horizontal .checkbox {
-    padding-top: 0px;
+  padding-top: 0px;
 }
 
 .day-entry-table-row {
-  margin-top: 50px;
+  margin-top: 1.5em;
   margin-bottom: 20px;
 }
 
 .day-entry-table-container {
   /*border: 1px solid #ddd;*/
   /*padding: 15px;*/
-  font-size: 9pt;;
-  color: inherit;
+  font-size: 9pt;
 }
 
 .day-entry-table-time-value {
@@ -224,7 +227,6 @@
 }
 
 .day-entry-table-table th {
-  color: inherit;
 }
 .day-entry-table-table-header {
   margin-bottom: 5px;
@@ -252,16 +254,13 @@
 }
 
 .billing-method-badge-overhead {
-  background-color: inherit;
 }
 
 .billing-method-badge-nacalculatie,.billing-method-badge-hourly {
-  background-color: inherit;
 }
 
 .billing-method-badge-fixed-price {
   /*TODO: untested since we don't do nacalculatie anymore*/
-  background-color: inherit;
 }
 
 #post-new-entry-bar .selectize-control .selectize-input input {
@@ -274,9 +273,9 @@
 }
 
 .entry-form-errors {
-    display: none;
+  display: none;
 }
 
 .entry-form-errors-has-errors {
-    display: block;
+  display: block;
 }
