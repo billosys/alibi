@@ -1,17 +1,19 @@
 <div class="navbar navbar-inverse navbar-static-top">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-2">
-        <ul class="nav navbar-nav">
-          <li {% ifequal active "projects" %}class="active"{% endifequal %}><a href="/projects">Projects</a></li>
-          <li {% ifequal active "entry" %}class="active"{% endifequal %}><a href="/time">Time</a></li>
-        </ul>
-      </div>
-      <div class="col-md-8" id="post-new-entry-bar-container">
-      </div>
-      <div class="col-md-2">
-        <p class="navbar-text pull-right">Logged in as <strong>{{identity.username}}</strong></p>
-      </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand">Tímı</a>
+    </div>
+    <div class="collapse navbar-collapse">
+
+      <ul class="nav navbar-nav">
+        <li {% ifequal active "projects" %}class="active"{% endifequal %}><a href="/projects">Projects</a></li>
+        <li {% ifequal active "entry" %}class="active"{% endifequal %}><a href="/time">Time</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Logged in as <strong>{{identity.username}}</strong></a></li>
+      </ul>
+
     </div>
   </div>
 </div>

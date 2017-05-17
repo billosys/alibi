@@ -1,3 +1,7 @@
+.navbar-brand {
+  font-family: 'Cormorant Garamond', serif;
+}
+
 .form-inline .time-entry-input {
     width: 70px;
 }
@@ -258,6 +262,10 @@
 .billing-method-badge-fixed-price {
   /*TODO: untested since we don't do nacalculatie anymore*/
   background-color: inherit;
+}
+
+#post-new-entry-bar .selectize-control .selectize-input input {
+
 }
 
 #post-new-entry-bar .selectize-input .option-selected .billing-method-badge{
