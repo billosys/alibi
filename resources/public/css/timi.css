@@ -19,16 +19,17 @@
     margin-bottom: 0;
 }
 
-#activity-svg-container {
-  /*border: 1px solid blue;*/
-}
-
-#activity-graphic {
+#activity-graphic row {
   /*background-color: #d3d3cf;*/
     /*background-color: #f8f8f8;*/
 }
 
-#activity-svg-container {
+#activity-svg-container svg {
+  background-color: #8896a4;
+}
+
+.selected-date-highlight {
+  fill: #df691a;
 }
 
 .day-container {
@@ -44,13 +45,13 @@
 }
 
 .hour-line {
-  stroke: #708f99;
+  stroke: inherit;
   cursor: pointer;
   stroke-width: 8px;
 }
 
 .hour-line-is-billable {
-  stroke: #b3cfdc;
+  stroke: inherit;
 }
 
 .billable-line {
@@ -69,7 +70,7 @@
 
 .project-label,.compound-label {
   font-size: 8pt;
-  fill: #737373;
+  fill: inherit;
 }
 
 .time-label {
@@ -78,22 +79,22 @@
 
 .project-heading {
     font-size: 10pt;
-    fill: #3e3e3e;
+    fill: inherit;
 }
 
 .grid-day-separator {
     /*stroke: #e7e7e7;*/
-    stroke: #ddd;
+    stroke: inherit;
     stroke-width: 0.5;
 }
 
 .grid-time-label {
     font-size: 8pt;
-    fill: #737373;
+    fill: inherit;
 }
 
 .grid-day-label {
-    fill: #737373;
+    fill: inherit;
     font-size: 14px;
 }
 
@@ -108,7 +109,7 @@
 }
 
 .day-summary-label {
-    fill: #737373;
+    fill: inherit;
     font-size: 8pt;
 }
 
@@ -121,11 +122,11 @@
 }
 
 .time-line.day-complete-not-complete {
-    stroke: #a03737;
+    stroke: inherit;
 }
 
 .day-summary-label .day-complete-not-complete {
-    fill: #a03737;
+    fill: inherit;
 }
 
 .hour-entry-active {
@@ -133,12 +134,8 @@
 }
 
 .now-indicator {
-  stroke: #dca5a5;
+  stroke: inherit;
   stroke-width: 1;
-}
-
-.selected-date-highlight {
-  fill:#effafb;
 }
 
 .row-entry-form {
@@ -195,7 +192,7 @@
   /*border: 1px solid #ddd;*/
   /*padding: 15px;*/
   font-size: 9pt;;
-  color: #666;
+  color: inherit;
 }
 
 .day-entry-table-time-value {
@@ -212,10 +209,10 @@
 }
 
 .day-entry-table-table thead {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid inherit;
 }
 .day-entry-table-table tfoot {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid inherit;
 }
 
 .day-entry-table-table tbody td {
@@ -223,7 +220,7 @@
 }
 
 .day-entry-table-table th {
-  color: #888;
+  color: inherit;
 }
 .day-entry-table-table-header {
   margin-bottom: 5px;
@@ -251,16 +248,16 @@
 }
 
 .billing-method-badge-overhead {
-  background-color: #b94a48;
+  background-color: inherit;
 }
 
 .billing-method-badge-nacalculatie,.billing-method-badge-hourly {
-  background-color: #468847;
+  background-color: inherit;
 }
 
 .billing-method-badge-fixed-price {
   /*TODO: untested since we don't do nacalculatie anymore*/
-  background-color: #3a87ad;
+  background-color: inherit;
 }
 
 #post-new-entry-bar .selectize-input .option-selected .billing-method-badge{
