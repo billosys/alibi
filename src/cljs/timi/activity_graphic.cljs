@@ -20,9 +20,12 @@
 (def default-min-time  (. LocalTime parse "08:00"))
 (def default-max-time  (. LocalTime parse "18:00"))
 
-(defn parse-float [n] (js/parseFloat n))
+(defn parse-float
+  [n]
+  (js/parseFloat n))
 
-(defn get-abs-bounding-client-rect [dom-el]
+(defn get-abs-bounding-client-rect
+  [dom-el]
   (let [rect (.getBoundingClientRect dom-el)
         scroll-x (.-scrollX js/window)
         scroll-y (.-scrollY js/window)]
@@ -62,17 +65,20 @@
              :bottom-padding-px 50}
    :time-line  {:width-px 8}})
 
-(defn find-first-monday [for-date]
+(defn find-first-monday
+  [for-date]
   (if (string? for-date) (recur (. LocalDate parse for-date))
     (if (= (. for-date dayOfWeek) (.-MONDAY DayOfWeek))
       for-date
       (recur (. for-date plusDays -1)))))
 
-(defn c [el attrs & children]
+(defn c
+  [el attrs & children]
   ;(log "attrs %o" attrs)
   (apply js/React.createElement el attrs children))
 
-(defn svg-glow [id color & {:keys [radius std-dev] :or {:radius 1 :std-dev 1}}]
+(defn svg-glow
+  [id color & {:keys [radius std-dev] :or {:radius 1 :std-dev 1}}]
   ;from http://stackoverflow.com/a/36564885/345910
   (str "<filter id='" id "' x='-5000%' y='-5000%' width='10000%' height='10000%'>
          <feFlood result='flood' flood-color='" color "' flood-opacity='1'></feFlood>
@@ -85,28 +91,35 @@
          </feMerge>
        </filter>"))
 
-(defn draw-result-empty []
+(defn draw-result-empty
+  []
   {:y-offset 0 :els []})
 
-(defn draw-result-append-el [el draw-result]
+(defn draw-result-append-el
+  [el draw-result]
   (update draw-result :els conj el))
 
-(defn draw-result-add-to-y [inc draw-result]
+(defn draw-result-add-to-y
+  [inc draw-result]
   (update draw-result :y-offset + inc))
 
-(defn draw-result-set-y-offset [y-offset draw-result]
+(defn draw-result-set-y-offset
+  [y-offset draw-result]
   (assoc draw-result :y-offset y-offset))
 
-(defn drawing-const [keys & default]
+(defn drawing-const
+  [keys & default]
   (get-in drawing-contants keys default))
 
-(defn bars-sum-duration [bars]
+(defn bars-sum-duration
+  [bars]
   (. Duration ofMinutes
      (reduce (fn [sum {:keys [from till] :as next}]
                (+ sum (. from until till (.-MINUTES ChronoUnit))))
              0 bars)))
 
-(defn bars-merge [bars]
+(defn bars-merge
+  [bars]
   (letfn [(bars-overlap? [a b]
             (if (< (.compareTo (:from b) (:from a)) 0)
               (recur b a)
@@ -126,19 +139,12 @@
                             (.compareTo a-from b-from))
                           bars))))
 
-(defn date->grid-label [for-date]
-  (let [months ["jan" "feb", "mar", "apr", "may", "jun", "jul", "aug",
-                    "sep" "oct", "nov", "dec"]
-        weekDays  ["Mon" "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]]
-    (str (weekDays (dec (.. for-date dayOfWeek value)))
-         ", "
-         (. for-date dayOfMonth)
-         " "
-         (months (dec (.. for-date month value)))
-         " '"
-         (mod (. for-date year) 100))))
+(defn date->grid-label
+  [for-date]
+  (str (. for-date dayOfWeek)))
 
-(defn init-data [project-data]
+(defn init-data
+  [project-data]
   (->> project-data
        (sort (fn [{a-from :from} {b-from :from}] (compare a-from b-from)))
        (map (fn [{:keys [from till task-id] :as project-row}]
@@ -154,7 +160,8 @@
                                      {b-from :from}]
                                   (.compareTo a-from b-from))))}))))
 
-(defn calc-min-max-time [projects]
+(defn calc-min-max-time
+  [projects]
   (cond (= 0 (count projects)) [default-min-time
                                 default-max-time]
         :else
@@ -256,7 +263,8 @@
                  :textAnchor "end"}
                 (.toString max-time))))))))
 
-(defn draw-no-data-msg [draw-result]
+(defn draw-no-data-msg
+  [draw-result]
   (->> draw-result
        (draw-result-append-el
          (dom/text
@@ -271,7 +279,9 @@
          (+ (drawing-const [:no-data :y-offset-px])
             (drawing-const [:no-data :bottom-padding-px])))))
 
-(defn noop [& more] nil)
+(defn noop
+  [& more]
+  nil)
 
 (defn render-row
   [selected-entry instant-to-x text bars
@@ -650,7 +660,8 @@
             ;(log "draw-result" (:els draw-result))
             ;(concat (:els grid) (:els draw-result)))))))
 
-(defn render-change-date-btns [dispatch! selected-date]
+(defn render-change-date-btns
+  [dispatch! selected-date]
   (let [on-change-date #(dispatch! (actions/time-page-change-date %))
         selected-date (.parse LocalDate selected-date)]
     (dom/div
@@ -669,7 +680,8 @@
         (dom/span
           #js {:className "glyphicon glyphicon-chevron-right"})))))
 
-(defn tooltip-component [state owner]
+(defn tooltip-component
+  [state owner]
   (let [{:keys [top width left comment ]} state]
     (reify
       om/IRender
@@ -719,7 +731,8 @@
     html))
 
 
-(defn render-html [{:keys [dispatch! get-state]} owner]
+(defn render-html
+  [{:keys [dispatch! get-state]} owner]
   (reify
     om/IRender
     (render [_]

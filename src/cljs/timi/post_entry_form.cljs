@@ -10,7 +10,9 @@
     [timi.time-page-state :as state
      :refer []]))
 
-(defn parse-float [v] (js/parseFloat v))
+(defn parse-float
+  [v]
+  (js/parseFloat v))
 
 (defn active-errors
   [form]
@@ -22,14 +24,16 @@
   (seq (when (state/form-submitted? form)
          (state/form-validate-form (state/form-form-at-submit-time form)))))
 
-(defn on-form-submit [form on-error event]
+(defn on-form-submit
+  [form on-error event]
   (let [errors (state/form-validate-form form)]
     (when (seq errors)
       (do
         (.preventDefault event)
         (on-error form)))))
 
-(defn datepicker [data owner]
+(defn datepicker
+  [data owner]
   (let [get-elements
         (fn []
           (let [el (om/get-node owner "element")
@@ -94,7 +98,8 @@
                           (str " "(get % 1))))
              summary-errors)))))
 
-(defn time-input [id value on-change]
+(defn time-input
+  [id value on-change]
   (dom/input
     #js {:id id :className "form-control time-entry-input" :type "text"
          :name id :value value :size "5" :maxLength "5" :autoComplete "off"
@@ -105,7 +110,8 @@
          :onKeyDown #(when (= (.-keyCode %) 13)
                        (on-change (expand-time (.. % -target -value))))}))
 
-(defn date-time-entry-row [dispatch! form]
+(defn date-time-entry-row
+  [dispatch! form]
   (let [failed-fields (into {} (active-errors form))
         start-time-error? (failed-fields "Start time")
         end-time-error? (failed-fields "End time")
@@ -159,7 +165,8 @@
               (when end-time-error?
                 (dom/span nil (str "End time: " end-time-error?))))))))))
 
-(defn comment-row [dispatch! form]
+(defn comment-row
+  [dispatch! form]
   (dom/div
     #js {:className "form-group"}
     (dom/label
@@ -179,7 +186,8 @@
         #js {:className "help-block"}
         "Provide any details that can help the customer understand what you've worked on."))))
 
-(defn billable?-row [dispatch! form]
+(defn billable?-row
+  [dispatch! form]
   (dom/div
     #js {:className "form-group"}
     (dom/div
@@ -198,7 +206,8 @@
                                         :billable? (.. % -target -checked)})})
           "This entry is billable")))))
 
-(defn btn-row [dispatch! form]
+(defn btn-row
+  [dispatch! form]
   (let [editing? (integer? (parse-float (state/form-entry-id form)))]
     (dom/div
       #js {:className "form-group"}
@@ -261,7 +270,8 @@
                 (billable?-row dispatch! form)
                 (btn-row dispatch! form)))))))))
 
-(defn om-component [{:keys [dispatch! get-state]} owner]
+(defn om-component
+  [{:keys [dispatch! get-state]} owner]
   (reify
     om/IRender
     (render [_]

@@ -1,3 +1,13 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
 .navbar-brand {
   font-family: 'Cormorant Garamond', serif;
   font-size: 225%;
@@ -68,7 +78,6 @@
 
 .not-billable-line {
   stroke: red;
-
 }
 
 .booked-line {
@@ -92,8 +101,8 @@
 
 .grid-day-separator {
   /*stroke: #e7e7e7;*/
-  stroke: inherit;
-  stroke-width: 0.5;
+  stroke: #354657;
+  stroke-width: 1px;
 }
 
 .grid-time-label {
@@ -104,16 +113,25 @@
 .grid-day-label {
   fill: inherit;
   font-size: 14px;
+  font-weight: bold;
 }
 
 .grid-day-label:hover {
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
+  fill: #8fa4ba;
 }
 
 .grid-day-label-is-selected {
-  text-decoration: underline;
+  text-decoration: none;
   font-size:16px;
+  fill: #485563;
+}
+
+.grid-day-label-is-selected:hover {
+  text-decoration: none;
+  font-size:16px;
+  fill: white;
 }
 
 .day-summary-label {
@@ -278,4 +296,20 @@
 
 .entry-form-errors-has-errors {
   display: block;
+}
+
+footer {
+  background-color: #4e5d6c;
+  color: #84919f;
+  margin-bottom: 2em;
+}
+
+footer li a, footer li a:link, footer li a:hover {
+  color: #84919f;
+}
+
+footer p {
+  white-space: nowrap;
+  display: :inline-flex;
+  padding-top: 9px;
 }

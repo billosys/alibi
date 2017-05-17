@@ -1,48 +1,57 @@
 <!doctype html>
-
 <html lang="en">
-
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="initial-scale=1.0,width=device-width,maximum-scale=1" />
-  <title>Tímı Tracker</title>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:300&amp;subset=latin-ext">
-  <link rel="stylesheet"
-        type="text/css"
-        href="/assets/bootswatch-superhero/css/bootstrap.min.css">
-  <link rel="stylesheet"
-        type="text/css"
-        href="/assets/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet"
-        type="text/css"
-        href="/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
-  <link rel="stylesheet"
-        type="text/css"
-        href="/css/timi.css" />
-  {% block stylesheets %}
-  {% endblock %}
-</head>
-<body class="timi">
-
-{% block top-nav %}
-{% endblock %}
-
-<div class="container">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0,width=device-width,maximum-scale=1" />
+    <title>Tímı Tracker</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Cormorant+Garamond:300&amp;subset=latin-ext">
+    <link rel="stylesheet"
+          type="text/css"
+          href="/assets/bootswatch-superhero/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          type="text/css"
+          href="/assets/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          type="text/css"
+          href="/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet"
+          type="text/css"
+          href="/css/timi.css" />
+    {% block stylesheets %}
+    {% endblock %}
+  </head>
+  <body class="timi">
+    <header>
+      {% block top-nav %}
+      {% endblock %}
+    </header>
+    <main>
+      <div class="container">
         {% block body %}
         {% endblock %}
-</div>
-
-{% block end-of-body %}
-{% endblock %}
-
-<script src="/assets/jquery/jquery.min.js"></script>
-<script src="/assets/bootswatch-superhero/js/bootstrap.min.js"></script>
-<script src="/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-<script src="/dist/external/js-joda/js-joda.min.js"></script>
-
-{% block javascript %}
-{% endblock %}
-
-</body>
+      </div>
+    </main>
+    <footer>
+      {% block footer %}
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li><p>Copyright &copy; 2017 <a href="http://billo.systems/">BilloSystems, Ltd. Co.</a></p></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="https://github.com/billosys"><i class="fa fa-github fa-lg"></i></a></li>
+          <li><a href="https://twitter.com/billoeng"><i class="fa fa-twitter fa-lg"></i></a></li>
+        </ul>
+      </div>
+      {% endblock %}
+    </footer>
+    {% block end-of-body %}
+    {% endblock %}
+    <script src="/assets/jquery/jquery.min.js"></script>
+    <script src="/assets/bootswatch-superhero/js/bootstrap.min.js"></script>
+    <script src="/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="/dist/external/js-joda/js-joda.min.js"></script>
+    {% block javascript %}
+    {% endblock %}
+  </body>
 </html>

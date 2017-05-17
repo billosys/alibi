@@ -15,7 +15,7 @@
       (.. js/$
          (ajax
            #js {:method "get"
-                :url (str "/entry/day-entries?for-date=" new-date)})
+                :url (str "/time/day-entries?for-date=" new-date)})
          (done
            (fn [html] (aset container "innerHTML" html)))
          (fail
