@@ -1,4 +1,4 @@
-# Tími
+# Tímı
 
 A time tracker written in Clojure(Script).
 
