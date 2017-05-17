@@ -45,7 +45,7 @@
 }
 
 .hour-line {
-  stroke: inherit;
+  stroke: #5bc0de;
   cursor: pointer;
   stroke-width: 8px;
 }
