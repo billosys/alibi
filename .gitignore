@@ -14,7 +14,7 @@ pom.xml.asc
 /config/**/config.edn
 /config/**/*.pem
 /config/**/*.pub
-/node_modules
+/dev-resources/js/node_modules
 /resources/public/dist/
 /var/data/
 /var/logs/

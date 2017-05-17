@@ -9,17 +9,17 @@ module.exports = function(grunt) {
             expand:true,
             cwd: 'node_modules/js-joda/dist/',
             src: '**/*',
-            dest: 'resources/public/dist/external/js-joda/'
+            dest: '../../resources/public/dist/external/js-joda/'
           },{
             expand:true,
             cwd: 'node_modules/selectize/dist/',
             src: '**/*',
-            dest: 'resources/public/dist/external/selectize/'
+            dest: '../../resources/public/dist/external/selectize/'
           },{
             expand:true,
             cwd: 'node_modules/fuzzy/lib/',
             src: '**/*',
-            dest: 'resources/public/dist/external/fuzzy/'
+            dest: '../../resources/public/dist/external/fuzzy/'
           }]
         }
       }
