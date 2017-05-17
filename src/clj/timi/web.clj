@@ -10,6 +10,7 @@
     [selmer.parser :as selmer]
     [timi.application.authn-authz :refer [wrap-authn-and-authz]]
     [timi.application.screens.entry-screen :as entry-screen]
+    [timi.application.screens.projects-screen :as projects-screen]
     [timi.application.timi-identity :refer [wrap-augment-identity]]
     [timi.config :refer [read-config]]
     [timi.infra.date-time :refer [today format-date str->local-date]]))
@@ -41,6 +42,9 @@
   (POST "/entry/:for-date"
         request
         (entry-screen/post request))
+  (GET "/projects"
+       request
+       (projects-screen/get-page request))
   (GET "/*" {{resource-path :*} :route-params}
        (fn [req]
          (let [resp (some->
