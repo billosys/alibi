@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<div id="post-new-entry-bar-container">
+<h2>Time Entry</h2>
+
+<div id="post-new-entry-bar-container" class="well">
 </div>
 
 <input type="hidden" id="view-data" value="{{view-data}}" />
@@ -14,12 +16,13 @@
   </div>
 </div>
 
-<h2 id="entries-for-day-date">{{entries-for-day.formatted-date}}<h2>
+<h3 id="entries-for-day-date">{{entries-for-day.formatted-date}}<h3>
 
 <div class="row activity-graphic-row well">
   <div class="col-md-12" id="activity-graphic">
   </div>
 </div>
+<h3>Entries for the Day</h3>
 <div class="row day-entry-table-row" id="day-entry-table">
 {% include "templates/day-entries-table.html" %}
 </div>

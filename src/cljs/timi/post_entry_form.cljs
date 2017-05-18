@@ -259,16 +259,12 @@
         (dom/div
           #js {:className "col-md-12"}
           (validation-summary form)
-          (dom/div
-            #js {:className "panel panel-default"}
-            (dom/div
-              #js {:className "panel-body"}
-              (dom/fieldset
-                nil
-                (date-time-entry-row dispatch! form)
-                (comment-row dispatch! form)
-                (billable?-row dispatch! form)
-                (btn-row dispatch! form)))))))))
+          (dom/fieldset
+            nil
+            (date-time-entry-row dispatch! form)
+            (comment-row dispatch! form)
+            (billable?-row dispatch! form)
+            (btn-row dispatch! form)))))))
 
 (defn om-component
   [{:keys [dispatch! get-state]} owner]

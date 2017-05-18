@@ -16,9 +16,6 @@ main {
 .form-inline .time-entry-input {
 }
 
-.input-group-datepicker {
-}
-
 .form-group-inline {
   float: left;
   margin-right: 15px;
@@ -30,6 +27,17 @@ main {
 
 .form-group-inline .help-block {
   margin-bottom: 0;
+}
+
+.control-label {
+  text-align: right;
+}
+
+.help-block {
+  font-style: italic;
+}
+
+.input-group-datepicker {
 }
 
 .activity-graphic-row {
