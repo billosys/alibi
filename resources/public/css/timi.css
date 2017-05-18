@@ -13,6 +13,20 @@ main {
   font-size: 225%;
 }
 
+.nav-tabs > li {
+  font-size: 70%;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:link {
+  background-color: #4e5d6c;
+}
+
+.nav-tabs > li > a:hover {
+  background-color: #3d4c5c;
+}
+
 .form-inline .time-entry-input {
 }
 
@@ -219,7 +233,6 @@ main {
 
 .day-entry-table-row {
   margin-top: 1.5em;
-  margin-bottom: 20px;
 }
 
 .day-entry-table-container {
@@ -280,9 +293,13 @@ main {
 }
 
 .billing-method-badge-overhead {
+  background-color: orange;
+  color: black;
 }
 
-.billing-method-badge-nacalculatie,.billing-method-badge-hourly {
+.billing-method-badge-nacalculatie,
+.billing-method-badge-hourly {
+  background-color: green;
 }
 
 .billing-method-badge-fixed-price {

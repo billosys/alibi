@@ -6,6 +6,7 @@
     [clojure.set :refer [rename-keys]]
     [clojure.walk :refer [keywordize-keys]]
     [ring.util.response :as response]
+    [taoensso.timbre :as log]
     [timi.domain.entry-app-svc :as svc]
     [timi.domain.query-handler :as queries]
     [timi.domain.task :refer [project-id-for-task-id]]
@@ -199,7 +200,9 @@
 (defn day-entries-table
   [{{for-date "for-date"} :params identity :identity}]
   {:pre [(str->local-date for-date)]}
+  (log/warn "for-date:" for-date)
   (let [data (entries-for-day (str->local-date for-date) (get identity :id))]
+    (log/warn "data:" data)
     (-> {:selmer-template "templates/day-entries-table.html"}
         (assoc :template-data {:entries-for-day data})
         (response/response))))

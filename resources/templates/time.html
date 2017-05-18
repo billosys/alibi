@@ -18,14 +18,35 @@
 
 <h3 id="entries-for-day-date">{{entries-for-day.formatted-date}}<h3>
 
-<div class="row activity-graphic-row well">
-  <div class="col-md-12" id="activity-graphic">
+<div>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#week" aria-controls="week" role="tab" data-toggle="tab">Week</a>
+    </li>
+    <li role="presentation">
+        <a href="#day" aria-controls="day" role="tab" data-toggle="tab">Day</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+   <!-- Week view content -->
+    <div role="tabpanel" class="tab-pane active well" id="week">
+      <div class="row activity-graphic-row">
+        <div class="col-md-12" id="activity-graphic">
+        </div>
+      </div>
+    </div>
+    <!-- Day view content -->
+    <div role="tabpanel" class="tab-pane well" id="day">
+      <div class="row day-entry-table-row" id="day-entry-table">
+      {% include "templates/day-entries-table.html" %}
+      </div>
+    </div>
   </div>
 </div>
-<h3>Entries for the Day</h3>
-<div class="row day-entry-table-row" id="day-entry-table">
-{% include "templates/day-entries-table.html" %}
-</div>
+
 {% endblock %}
 
 {% block end-of-body %}

@@ -6,16 +6,20 @@
     :url "https://www.mozilla.org/en-US/MPL/2.0/"}
   :min-lein-version "2.7.1"
   :dependencies [
-    [bouncer "1.0.1"]
-    [buddy/buddy-auth "1.1.0"]
-    [buddy/buddy-sign "1.1.0"]
+    [bouncer "1.0.1" :exclusions [com.andrewmcveigh/cljs-time]]
+    [buddy/buddy-auth "1.4.1"]
+    [buddy/buddy-sign "1.5.0"]
     [clj-http "2.1.0"]
     [clj-time "0.13.0"]
     [clojure.jdbc/clojure.jdbc-c3p0 "0.3.2"]
+    [clojusc/trifl "0.1.0-SNAPSHOT"]
+    [clojusc/twig "0.3.2-SNAPSHOT"]
     [com.andrewmcveigh/cljs-time "0.4.0"]
-    [compojure "1.4.0"]
+    [com.stuartsierra/component "0.3.2"]
+    [compojure "1.6.0"]
     [crypto-random "1.2.0"]
-    [mysql/mysql-connector-java "5.1.6"]
+    [http-kit "2.2.0"]
+    [mysql/mysql-connector-java "6.0.6"]
     [org.clojure/clojure "1.8.0"]
     [org.clojure/data.json "0.2.6"]
     [org.clojure/java.jdbc "0.7.0-alpha2"]
@@ -24,11 +28,12 @@
     [org.webjars/font-awesome "4.7.0"]
     [org.webjars/jquery "3.2.0"]
     [org.xerial/sqlite-jdbc "3.16.1"]
+    [ring-logger "0.7.7"]
     [ring-webjars "0.2.0"]
+    [ring.middleware.conditional "0.2.0"]
     [ring/ring-codec "1.0.1"]
-    [ring/ring-core "1.4.0"]
-    [ring/ring-jetty-adapter "1.4.0"]
-    [selmer "0.9.5"]]
+    [ring/ring-core "1.6.1"]
+    [selmer "1.10.7"]]
   :repl-options {
     :init-ns user}
   :plugins [
@@ -38,11 +43,6 @@
     [lein-pprint "1.1.1"]
     [lein-ring "0.9.7"]]
   :main timi.core
-  :ring {
-    :handler timi.core/app
-    ;:stacktraces? false
-    ;:nrepl {:start? true}
-    }
   :cljsbuild {
     :builds
       [{:id "dev"
@@ -84,10 +84,12 @@
     :css-dirs ["resources/public/res/css"]
     :server-logfile "var/logs/figwheel.log"}
   :profiles {
+    :uberjar {
+      :aot :all}
     :dev [{
       :dependencies [
-        [binaryage/devtools "0.8.2"]
-        [cljsjs/react "0.13.3-0"]
+        [binaryage/devtools "0.9.4"]
+        [cljsjs/react "15.5.0-0"]
         [com.cemerick/piggieback "0.2.1"]
         [figwheel-sidecar "0.5.10"]
         [org.clojure/clojurescript "1.9.542"]
@@ -123,4 +125,5 @@
     "timi-init" ["run" "sqlite" "create-db" :filename]
     "timi-create-project" ["with-profile" "+local" "run" "projects" "create" :name]
     "timi-create-task" ["with-profile" "+local" "run" "tasks" "create" :name]
-    "timi-run" ["with-profile" "+local" "ring" "server-headless"]})
+    "timi-run" ["with-profile" "+local" "run"]
+    "check-deps" ["with-profile" "+test" "ancient" "check" "all"]})

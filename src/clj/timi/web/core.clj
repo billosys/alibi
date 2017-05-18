@@ -1,5 +1,7 @@
 (ns timi.web.core
   (:require
+    [ring.logger :as logger-middleware]
+    [ring.middleware.conditional :refer [if-url-doesnt-match]]
     [ring.middleware.params :as params-middleware]
     [ring.middleware.session.cookie :as cookie-session]
     [ring.middleware.webjars :as webjars-middleware]
@@ -12,7 +14,17 @@
     [timi.web.middleware :as timi-middleware]
     [timi.web.routes :as routes]))
 
-(defn app [config]
+(defn wrap-with-logger
+  [handler config]
+  (if (get-in config [:log :http-requests?])
+    (if-url-doesnt-match
+      handler
+      (re-pattern (get-in config [:log :http-skip]))
+      logger-middleware/wrap-with-logger)
+    handler))
+
+(defn app
+  [config]
   (if (get config :selmer-caching? true)
     (selmer/cache-on!)
     (selmer/cache-off!))
@@ -26,4 +38,5 @@
         (timi-middleware/wrap-default-responses)
         (timi-middleware/wrap-selmer)
         (datasource/wrap-persistence config)
-        (webjars-middleware/wrap-webjars))))
+        (webjars-middleware/wrap-webjars)
+        (wrap-with-logger config))))
