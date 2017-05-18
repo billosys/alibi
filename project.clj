@@ -12,6 +12,7 @@
     [clj-http "2.1.0"]
     [clj-time "0.13.0"]
     [clojure.jdbc/clojure.jdbc-c3p0 "0.3.2"]
+    [com.andrewmcveigh/cljs-time "0.4.0"]
     [compojure "1.4.0"]
     [crypto-random "1.2.0"]
     [mysql/mysql-connector-java "5.1.6"]

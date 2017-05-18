@@ -22,8 +22,7 @@
   {:entries (queries/handle :entry-screen/entries-for-day
                             :user-id user-id
                             :day for-date)
-   :formatted-date (.toLowerCase
-                     (format-date "d MMM yyyy" for-date))
+   :formatted-date (format-date "EEEE, d MMMM yyyy" for-date)
    :for-date for-date})
 
 (defn- find-first-monday

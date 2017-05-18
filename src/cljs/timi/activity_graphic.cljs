@@ -1,5 +1,7 @@
 (ns timi.activity-graphic
   (:require
+    [cljs-time.format :as cljs-format]
+    [cljs-time.coerce :as cljs-coerce]
     [clojure.walk :refer [keywordize-keys]]
     [timi.logging :refer [log log-cljs]]
     [om.core :as om]
@@ -17,6 +19,8 @@
 (def DayOfWeek (. js/JSJoda -DayOfWeek))
 (def Instant (. js/JSJoda -Instant))
 
+(def long-format "EEEE, d MMMM yyyy")
+(def long-formatter (cljs-format/formatter long-format))
 (def default-min-time  (. LocalTime parse "08:00"))
 (def default-max-time  (. LocalTime parse "18:00"))
 
@@ -222,7 +226,12 @@
     (iterate-day-grid
       (fn [{:keys [left-x left-instant]}
            {:keys [y-offset] :as draw-result}]
-        (let [date (.ofInstant LocalDate left-instant)]
+        (let [date (.ofInstant LocalDate left-instant)
+              date-elem (. js/document getElementById "entries-for-day-date")]
+          (set! (. date-elem -innerHTML)
+                (->> (. selected-date toString)
+                     (cljs-coerce/from-string)
+                     (cljs-format/unparse long-formatter)))
           (->> draw-result
                (draw-result-append-el
                  (dom/text
