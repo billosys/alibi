@@ -19,7 +19,7 @@
   (log "fetching %o" for-date)
   (let [prom (.. js/$
                  (ajax #js
-                       {:url (str "/activity-graphic?from="
+                       {:url (str "/time/activity-graphic?from="
                                   for-date)
                         :dataType "json"
                         :method "get"})
