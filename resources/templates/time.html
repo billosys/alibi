@@ -1,5 +1,13 @@
 {% extends "templates/layout.html" %}
 
+{% block stylesheets %}
+<link rel="stylesheet"
+      type="text/css"
+      href="/assets/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />
+<link rel="stylesheet"
+      href="/dist/external/selectize/css/selectize.bootstrap3.css" />
+{% endblock %}
+
 {% block top-nav %}
 {% include "templates/header.html" with active="entry" %}
 {% endblock %}
@@ -61,12 +69,9 @@
 </div>
 {% endblock %}
 
-{% block stylesheets %}
-<link rel="stylesheet" href="/dist/external/selectize/css/selectize.bootstrap3.css">
-{% endblock %}
-
 {% block javascript %}
 <script src="/dist/external/fuzzy/fuzzy.js"></script>
+<script src="/assets/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="/dist/external/selectize/js/standalone/selectize.min.js"></script>
 <script src="/dist/cljs/timi.js"></script>
 {% endblock %}
