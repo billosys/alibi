@@ -152,6 +152,19 @@ handful of changes for our own needs and aesthetics has evolved into something
 that is a new application in its own right. Still, Tímı owes much of its DNA
 and all of its beginnings to Unfi's Alibi.
 
+If you would like to do interactive development with ClojureScript, Om, and/or
+CSS, you can run this instead:
+
+```
+$ lein timi-figwheel
+```
+
+As soon as you see the help text with all the functions you can use, open up
+[http://localhost:5099](http://localhost:5099) in your prefered browser. As soon
+as you do, you should then see the Clojure prompt appear in your terminal where
+you ran the command. You now have access to Om application state in the REPL
+and can run the client-side code there.
+
 
 ## License [&#x219F;](#contents)
 
