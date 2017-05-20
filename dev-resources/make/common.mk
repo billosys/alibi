@@ -11,9 +11,15 @@ cookie:
 run:
 	@lein timi-run
 
+dev:
+	@lein timi-figwheel
+
 clean: clean-cljs clean-clj
 
 clean-all: clean clean-node
+
+deploy:
+	@lein timi-deploy
 
 heading:
 	@make bar
