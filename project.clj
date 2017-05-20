@@ -115,6 +115,8 @@
             :custom-persistence]
     :demo [{:resource-paths ["config/demo"]}
            :custom-persistence]
+    :build [{:resource-paths ["config/sample"]}
+           :custom-persistence]
     :prod [{:resource-paths ["config/prod"]}
            :custom-persistence]
     :custom-persistence {}}
