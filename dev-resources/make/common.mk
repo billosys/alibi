@@ -12,7 +12,7 @@ run:
 	@lein timi-run
 
 dev:
-	@lein timi-figwheel
+	@rlwrap lein timi-figwheel
 
 clean: clean-cljs clean-clj
 
