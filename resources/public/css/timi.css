@@ -64,7 +64,6 @@ main {
 
 #date-navigator-container {
   maring-bottom: 0;
-  margin-right: 0.5em;
 }
 
 #date-navigator-container,
@@ -73,6 +72,21 @@ main {
 #date-navigator-container a:hover {
   background-color: transparent;
   border: 0;
+}
+
+#date-navigator button,
+#date-navigator button a,
+#date-navigator button a:link,
+#date-navigator button a:hover {
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: transparent;
+  border: 0;
+}
+
+#date-navigator button.btn-next-period,
+#date-navigator button.btn-next-period a {
+  padding-right: 0;
 }
 
 /*

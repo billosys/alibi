@@ -52,19 +52,21 @@
   {:target (js/document.getElementById "activity-graphic")})
 
 (om/root
+  activity-graphic/render-navigator
+  component-state
+  {:target (js/document.getElementById "date-navigator")})
+
+(om/root
   activity-graphic/render-tooltip
   component-state
   {:target (js/document.getElementById "activity-graphic-tooltip-container")})
 
-(defn render-day-table!
-  [for-state]
-  (let [new-date (state/selected-date for-state)]
-    (day-table/render "day-entry-table" new-date)))
-
 (add-watch
   state :renderer
   (fn [_ _ _ new-state]
-    ;(log "new-state %o" new-state)
-    (render-day-table! new-state)))
+     (log "new-state %o" new-state)
+    (->> new-state
+         (state/selected-date)
+         (day-table/render "day-entry-table"))))
 
 (reset! state @state)

@@ -675,20 +675,21 @@
   (let [on-change-date #(dispatch! (actions/time-page-change-date %))
         selected-date (.parse LocalDate selected-date)]
     (dom/div
-      #js {:className "pull-right btn-group"}
+      nil
       (dom/button
-        #js {:className "btn btn-default btn-xs btn-prev-period"
+        #js {:className "btn btn-default btn-prev-period"
              :onClick (fn [] (on-change-date (.plusDays selected-date -7)))}
-        (dom/span #js {:className "glyphicon glyphicon-chevron-left"}))
+        (dom/i #js {:className "fa fa-chevron-left fa-lg"
+                    :aria-hidden "true"}))
       (dom/button
-        #js {:className "btn btn-default btn-xs btn-period-today"
+        #js {:className "btn btn-default btn-period-today"
              :onClick (fn [] (on-change-date (.now LocalDate)))}
         "Today")
       (dom/button
-        #js {:className "btn btn-default btn-xs btn-next-period"
+        #js {:className "btn btn-default btn-next-period"
              :onClick (fn [] (on-change-date (.plusDays selected-date 7)))}
-        (dom/span
-          #js {:className "glyphicon glyphicon-chevron-right"})))))
+        (dom/i #js {:className "fa fa-chevron-right fa-lg"
+                    :aria-hidden "true"})))))
 
 (defn tooltip-component
   [state owner]
@@ -727,19 +728,25 @@
               (init-data project-data)
               #(dispatch! (actions/time-page-change-date %))
               {:selected-entry selected-entry-id})
-
         html (dom/div
                nil
                (dom/div
                  #js {:className "row"}
                  (dom/div
-                   #js {:className "col-md-12"}
-                   (render-change-date-btns dispatch! selected-date))
+                   #js {:className "col-md-12"})
                  (dom/div
                    #js {:id "activity-svg-container"}
                    svg)))]
     html))
 
+(defn render-navigator
+  [{:keys [dispatch! get-state]} owner]
+  (reify
+    om/IRender
+    (render [_]
+      (let [form (om/observe owner (state/entry-screen-form-cursor (get-state)))
+            selected-date (state/form-selected-date form)]
+        (render-change-date-btns dispatch! selected-date)))))
 
 (defn render-html
   [{:keys [dispatch! get-state]} owner]

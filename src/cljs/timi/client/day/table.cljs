@@ -3,7 +3,9 @@
     [timi.client.logging :refer [log]]))
 
 (defn current-selected-date-el []
-  (.getElementById js/document "day-entry-table-for-date"))
+  (.getElementById
+    js/document
+    "day-entry-table-for-date"))
 
 (defn render [container-id new-date]
   (let [selected-date (current-selected-date-el)
@@ -13,12 +15,14 @@
       ;(log "old-date" old-date)
       ; we use $selected-date to prevent multiple ajax requests for same date
       (aset selected-date "value" new-date)
-      (.. js/$
-         (ajax
-           #js {:method "get"
-                :url (str "/time/day-entries?for-date=" new-date)})
-         (done
-           (fn [html] (aset container "innerHTML" html)))
-         (fail
-           (fn []
-             (aset selected-date "value" old-date)))))))
+      (..
+        js/$
+        (ajax
+          #js {:method "get"
+               :url (str "/time/day-entries?for-date=" new-date)})
+        (done
+          (fn [html]
+           (aset container "innerHTML" html)))
+        (fail
+          (fn []
+            (aset selected-date "value" old-date)))))))
