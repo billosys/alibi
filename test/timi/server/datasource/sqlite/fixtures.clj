@@ -1,6 +1,5 @@
 (ns timi.server.datasource.sqlite.fixtures
   (:require
-    [timi.infra.date-time :refer [->local-date ->local-time]]
     [timi.server.datasource.sqlite.bootstrap :refer [with-sqlite]]
     [timi.server.datasource.sqlite.db-tools :refer [
       sqlite-db-tools sqlite-user-repo]]
@@ -9,7 +8,8 @@
     [timi.server.domain.entry :as entry]
     [timi.server.domain.project :refer [new-project]]
     [timi.server.domain.task :refer [new-task]]
-    [timi.server.domain.user :as user-repo]))
+    [timi.server.domain.user :as user-repo]
+    [timi.server.infra.date-time :refer [->local-date ->local-time]]))
 
 (def ^:private migrations-path "datasources/sqlite/migrations")
 
