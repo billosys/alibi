@@ -17,9 +17,9 @@
 
 (defn selectize-score-fn [options search]
   (let [default-score 0
-        search-results (. js/fuzzy filter
-                          search (clj->js options)
-                          #js {:extract #(aget % "text")})
+        search-results (.filter js/fuzzy
+                                search (clj->js options)
+                                #js {:extract #(aget % "text")})
         score-by-option-value
         (into {}
               (map #(vector (.. % -original -value)

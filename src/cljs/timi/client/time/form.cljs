@@ -24,9 +24,8 @@
   [form on-error event]
   (let [errors (state/form-validate-form form)]
     (when (seq errors)
-      (do
-        (.preventDefault event)
-        (on-error form)))))
+      (.preventDefault event)
+      (on-error form))))
 
 (defn datepicker
   [data owner]
@@ -40,11 +39,11 @@
       om/IDidMount
       (did-mount [_]
         (let [{:keys [$input-element $show-btn]} (get-elements)]
-          (. $input-element datepicker #js {:todayBtn "linked",
-                                            :todayHighlight true,
-                                            :language "nl",
-                                            :format "yyyy-mm-dd",
-                                            :autoclose true })
+          (.datepicker $input-element #js {:todayBtn "linked",
+                                           :todayHighlight true,
+                                           :language "nl",
+                                           :format "yyyy-mm-dd",
+                                           :autoclose true })
           (.. $input-element datepicker
               (on "changeDate"
                   (fn [event]
@@ -52,15 +51,15 @@
                                     (.. event -date getTime))
 
                           new-date
-                          (.toString (js/JSJoda.LocalDate.ofInstant instant))]
+                          (str (js/JSJoda.LocalDate.ofInstant instant))]
                       ((:onChangeDate data identity) new-date)))))
-          (. $show-btn on "click" #(.datepicker $input-element "show"))))
+          (.on $show-btn "click" #(.datepicker $input-element "show"))))
 
       om/IWillUnmount
       (will-unmount [_]
         (let [{:keys [$input-element $show-btn]} (get-elements)]
-          (. $input-element datepicker "destroy")
-          (. $show-btn off)))
+          (.datepicker $input-element "destroy")
+          (.off $show-btn)))
 
       om/IRender
       (render [_]
