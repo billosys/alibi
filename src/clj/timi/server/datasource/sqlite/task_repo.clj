@@ -21,9 +21,9 @@
                  :task-id (:id task-row)}))
 
 (defn- add! [db-spec task]
-  (->
-    (db/insert! db-spec :tasks (task->row task))
-    (insert-id)))
+  (-> db-spec
+      (db/insert! :tasks (task->row task))
+      (insert-id)))
 
 (defn task-exists? [db-spec task-id]
   (seq (db/query db-spec ["select id from tasks where id=?" task-id])))

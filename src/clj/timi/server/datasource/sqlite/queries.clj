@@ -17,17 +17,17 @@
     from projects p join tasks t on t.project_id=p.id
     order by p.name asc, t.name asc"
     {:row-fn (fn [row]
-               (-> row
-                   (assoc :billing-method (capitalize (:billing_type row)))))}))
+               (assoc row
+                      :billing-method (capitalize (:billing_type row))))}))
 
 (defn entries-for-day [db-spec {:keys [day user-id] :as args}]
   (let [row-fn (fn [r]
                  (-> r
                      (update :billable? = 1)
-                     (assoc :duration (-> (seconds-between
-                                            (->local-time (:start-time r))
-                                            (->local-time (:end-time r)))
-                                          .getSeconds))))
+                     (assoc :duration (.getSeconds
+                                        (seconds-between
+                                          (->local-time (:start-time r))
+                                          (->local-time (:end-time r)))))))
 
         records (db/query
                   db-spec
@@ -54,7 +54,7 @@
 (defn activity-graphic [db-spec {:keys [from user-id]}]
   {:pre [(local-date? from)
          (integer? user-id)]}
-  (let [till (. from plusDays 7)]
+  (let [till (.plusDays from 7)]
     (db/query
       db-spec
       ["select e.task_id 'task-id', e.is_billable 'billable?',

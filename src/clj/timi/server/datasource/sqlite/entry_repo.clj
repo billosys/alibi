@@ -33,7 +33,8 @@
       (:id row) (assoc :entry-id (:id row)))))
 
 (defn add-entry! [db-spec entry]
-  (-> (db/insert! db-spec :entries (entry->row entry))
+  (-> db-spec
+      (db/insert! :entries (entry->row entry))
       (insert-id)))
 
 (defn find-entry [db-spec entry-id]

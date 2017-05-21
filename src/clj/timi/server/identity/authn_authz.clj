@@ -12,8 +12,10 @@
 (defn get-auth-backends
   [config]
   {:openid (fn [] (openid/backend (:openid config)))
-   :single-user (fn [] (get-in config [:single-user :username]
-                               "anonymous"))})
+   :single-user (fn []
+                  (get-in config
+                          [:single-user :username]
+                          "anonymous"))})
 
 (defn get-auth-backend
   [config]
@@ -21,8 +23,11 @@
         auth-backends (get-auth-backends config)]
     (if-let [backend (get auth-backends auth-backend-key)]
       (backend)
-      (throw (Exception. (str "Auth backend " auth-backend-key " not supported"
-                              "try one of " (keys auth-backends)))))))
+      (throw
+        (Exception.
+          (format "Auth backend %s not supported; try one of %s"
+                  auth-backend-key
+                  (keys auth-backends)))))))
 
 (defn as-user-backend [username]
   (reify
@@ -31,13 +36,13 @@
     (-authenticate [_ _ _] username)
     buddy.auth.protocols/IAuthorization
     (-handle-unauthorized [_ _ _]
-      (->
-        (response/response  "Permission denied")
-        (response/status 403)))))
+      (-> "Permission denied"
+          (response/response)
+          (response/status 403)))))
 
 (defn wrap-authorize-all [handler]
   (fn [{:keys [uri] :as request}]
-    (if (not (authenticated? request))
+    (if-not (authenticated? request)
       (throw-unauthorized {:message "not authorized"})
       (handler request))))
 

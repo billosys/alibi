@@ -48,7 +48,8 @@
        (let [{:keys [body] fetch-token-status :status}
              (fetch-token authorization-code)]
          (if (not= fetch-token-status 200)
-           (-> (response body)
+           (-> body
+               (response)
                (status 400))
            (let [parsed (parse-oauth-response body)]
              (validate-id-token (:id_token parsed))))))
@@ -59,7 +60,8 @@
          :as request}]
        {:pre [oauth-state request-state authorization-code]}
        (if (not= request-state oauth-state)
-         (-> (response "invalid state token")
+         (-> "invalid state token"
+             (response)
              (status 400))
          (request-openid-token authorization-code)))
 
@@ -69,13 +71,14 @@
                            "state" csrf-token
                            "response_type" "code"
                            "scope" "openid"}]
-         (->
-           (redirect
-             (str authorization-endpoint "?" (form-encode query-params)))
-           (assoc-in [:session :oauth-state] csrf-token))))
+         (-> "%s?%s"
+             (format authorization-endpoint (form-encode query-params))
+             (redirect)
+             (assoc-in [:session :oauth-state] csrf-token))))
 
      (login-and-redirect-to-home [{:keys [session]} user-id]
-       (-> (redirect "/")
+       (-> "/"
+           (redirect)
            (assoc :session (assoc session :identity user-id))))
 
      (handle-unauthorized [request & _]

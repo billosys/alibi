@@ -26,7 +26,8 @@
     row->project))
 
 (defn- add! [db-spec project]
-  (-> (db/insert! db-spec :projects (project->row project))
+  (-> db-spec
+      (db/insert! :projects (project->row project))
       (insert-id)))
 
 (defn exists? [db-spec project-id]
