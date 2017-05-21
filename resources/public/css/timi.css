@@ -14,7 +14,7 @@ main {
 }
 
 .nav-tabs > li {
-  font-size: 70%;
+  font-size: 100%;
 }
 
 .nav-tabs > li.active > a,
@@ -236,7 +236,7 @@ main {
 #entry-form-container {
   max-height: 0px;
   overflow: hidden;
-  transition: max-height 0.4s ease 0s;
+  transition: max-height 0s ease 0s;
 }
 
 #entry-form-container.entry-form-visible {

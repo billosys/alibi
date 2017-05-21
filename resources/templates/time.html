@@ -19,15 +19,42 @@
 </div>
 
 <input type="hidden" id="view-data" value="{{view-data}}" />
-<div class="row row-entry-form" id="entry-form-react-container">
-  <div class="col-md-8 col-md-offset-2">
+
+<div>
+  <!-- Nav tabs for time entry types -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation">
+        <a href="#timer" aria-controls="timer" role="tab" data-toggle="tab">Timer</a>
+    </li>
+    <li role="presentation">
+        <a href="#total" aria-controls="total" role="tab" data-toggle="tab">Total Time</a>
+    </li>
+    <li role="presentation" class="active">
+        <a href="#range" aria-controls="range" role="tab" data-toggle="tab">Time Range</a>
+    </li>
+  </ul>
+
+  <!-- Tabbed panes for time entry types -->
+  <div class="tab-content">
+   <!-- Timer view content -->
+    <div role="tabpanel" class="tab-pane well" id="timer">
+    </div>
+    <!-- Total Time view content -->
+    <div role="tabpanel" class="tab-pane well" id="total">
+    </div>
+    <!-- Time Range view content -->
+    <div role="tabpanel" class="tab-pane active well" id="range">
+      <div class="row row-entry-form" id="entry-form-react-container">
+        <div class="col-md-8 col-md-offset-2"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<h3 id="entries-for-day-date">{{entries-for-day.formatted-date}}<h3>
+<h3 id="entries-for-day-date">{{entries-for-day.formatted-date}}</h3>
 
 <div>
-  <!-- Nav tabs -->
+  <!-- Nav tab week pager -->
   <ul id="date-navigator-container" class="nav nav-tabs navbar-right" role="tablist">
     <li role="presentation">
         <a href="#date-nav" aria-controls="day" role="tab">
@@ -35,6 +62,7 @@
         </a>
     </li>
   </ul>
+  <!-- Nav tabs for time-worked views -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
         <a href="#week" aria-controls="week" role="tab" data-toggle="tab">Week</a>
@@ -44,7 +72,7 @@
     </li>
   </ul>
 
-  <!-- Tab panes -->
+  <!-- Tabbed panes for time-worked views -->
   <div class="tab-content">
    <!-- Week view content -->
     <div role="tabpanel" class="tab-pane active well" id="week">
