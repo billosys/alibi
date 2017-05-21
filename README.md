@@ -142,7 +142,7 @@ $ make run
 ```
 
 If everything went well, there should now be a web server running on
-[http://localhost:5099](http://localhost:5099) (or whatever port you updated your 
+[http://localhost:5099](http://localhost:5099) (or whatever port you updated your
 local configuration to have). Navigate to it and have fun!
 
 
