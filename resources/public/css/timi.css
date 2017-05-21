@@ -130,7 +130,7 @@ main {
 }
 
 .hour-line-is-billable {
-  stroke: inherit;
+  stroke: #5cb85c;
 }
 
 .billable-line {
@@ -301,6 +301,14 @@ main {
   padding-right: 5px;
 }
 
+.day-entry-table-entry-row .not-billable {
+  color: #2b3e50;
+}
+
+.day-entry-table-entry-row .billable {
+  color: #5cb85c;
+}
+
 .day-entry-table-entry-comment {
   /*margin-left:5px;*/
   /*font-family: "georgia";*/
@@ -354,7 +362,7 @@ main {
 
 .billing-method-badge-nacalculatie,
 .billing-method-badge-hourly {
-  background-color: green;
+  background-color: #5cb85c;
 }
 
 .billing-method-badge-fixed-price {

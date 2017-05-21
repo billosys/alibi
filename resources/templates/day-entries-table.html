@@ -1,8 +1,7 @@
 <input type="hidden" id="day-entry-table-for-date" value="{{entries-for-day.for-date}}" />
 <div class="col-md-offset-0 col-md-6">
 <div class="panel panel-default">
-<div class="day-entry-table-container panel-body">
-<table class="day-entry-table-table">
+<table class="table table-striped table-hover">
 <thead>
 <tr>
 <th style="width: 100%;text-align: left;">Task</th>
@@ -28,7 +27,9 @@
 </td>
 <td style="width: 0px; text-align: center;">
 <div>{% if entry.billable? %}
-<i class="glyphicon glyphicon-ok" style="color: #bbb;"></i>
+<i class="fa fa-check-circle fa-lg billable" aria-hidden="true"></i>
+{% else %}
+<i class="fa fa-times-circle fa-lg not-billable" aria-hidden="true"></i>
 {% endif %}
 </div>
 </td>
@@ -60,6 +61,5 @@
 </tr>
 </tfoot>
 </table>
-</div>
 </div>
 </div>
