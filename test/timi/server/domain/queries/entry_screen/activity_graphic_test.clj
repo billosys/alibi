@@ -1,20 +1,19 @@
-(ns timi.domain.queries.entry-screen.activity-graphic-test
+(ns timi.server.domain.queries.entry-screen.activity-graphic-test
   (:require
-    [timi.test-helpers :refer [deftest copy-tests]]
-    [timi.datasource.tools :as db-tools]
-    [clojure.test :refer [is testing]]
-    [timi.domain.query-handler :refer [handle]]
     [clojure.pprint :refer [pprint]]
-    [timi.infra.date-time
-     :refer [today plus next-week yesterday ->local-time ->local-date
-             unix->datetime tomorrow ->unix ->datetime]]))
+    [clojure.test :refer [is testing]]
+    [timi.server.datasource.tools :as db-tools]
+    [timi.server.domain.query-handler :refer [handle]]
+    [timi.server.infra.date-time :refer [
+      today plus next-week yesterday ->local-time ->local-date unix->datetime
+      tomorrow ->unix ->datetime]]
+    [timi.server.test-helpers :refer [deftest copy-tests]]))
 
 (defn activity-graphic
   [& {:keys [from user-id]}]
   (handle :entry-screen/activity-graphic
           :user-id (or user-id (db-tools/get-default-user-id))
           :from (or from (today))))
-
 
 (deftest empty-result-set
   (is (empty? (activity-graphic)) "activity graphic should be empty"))

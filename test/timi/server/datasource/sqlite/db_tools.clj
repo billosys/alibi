@@ -1,13 +1,12 @@
-(ns timi.datasource.sqlite.db-tools
+(ns timi.server.datasource.sqlite.db-tools
   (:require
-    [timi.datasource.tools :as db-tools]
-    [timi.domain.project :as project]
-    [timi.domain.task :as task]
-    [timi.domain.entry :as entry]
-    [timi.domain.user :as user-repo]
-    [timi.infra.date-time
-     :refer [->local-time ->local-date today]]
-    [clojure.java.jdbc :as db]))
+    [clojure.java.jdbc :as db]
+    [timi.server.datasource.tools :as db-tools]
+    [timi.server.domain.entry :as entry]
+    [timi.server.domain.project :as project]
+    [timi.server.domain.task :as task]
+    [timi.server.domain.user :as user-repo]
+    [timi.server.infra.date-time :refer [->local-time ->local-date today]]))
 
 (def users (atom []))
 

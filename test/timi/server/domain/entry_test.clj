@@ -1,11 +1,10 @@
-(ns timi.domain.entry-test
+(ns timi.server.domain.entry-test
   (:require
     [clojure.test :refer :all]
-    [timi.infra.date-time
-     :refer [->local-time ->local-date today]]
-    [timi.domain.entry :as entry]
-    [timi.domain.project :as project]
-    [timi.domain.task :as task]))
+    [timi.server.domain.entry :as entry]
+    [timi.server.domain.project :as project]
+    [timi.server.domain.task :as task]
+    [timi.server.infra.date-time :refer [->local-time ->local-date today]]))
 
 (defn- valid-entry-data [m]
   (merge {:task-id 1

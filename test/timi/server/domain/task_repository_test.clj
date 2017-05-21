@@ -1,10 +1,9 @@
-(ns timi.domain.task-repository-test
+(ns timi.server.domain.task-repository-test
   (:require
     [clojure.test :refer [is testing]]
-    [timi.datasource.tools :as setup]
-    [timi.test-helpers :refer [deftest copy-tests]]
-    [timi.domain.task :as task]))
-
+    [timi.server.datasource.tools :as setup]
+    [timi.server.domain.task :as task]
+    [timi.server.test-helpers :refer [deftest copy-tests]]))
 
 ;TODO we probably need more tests here
 
@@ -35,7 +34,6 @@
                                            :billing-method billing-method})
               task (task/get task-id)]
           (is (= billing-method (:billing-method task)) "wrong billing-method"))))))
-
 
 (defn fixture [f]
   (setup/clean-all!)

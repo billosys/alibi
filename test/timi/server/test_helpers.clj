@@ -1,7 +1,8 @@
-(ns timi.test-helpers
-  (:require [clojure.data :refer [diff]]
-            [clojure.pprint :refer [pprint]]
-            [clojure.test :as test :refer [is]]))
+(ns timi.server.test-helpers
+  (:require
+    [clojure.data :refer [diff]]
+    [clojure.pprint :refer [pprint]]
+    [clojure.test :as test :refer [is]]))
 
 (defn- pprint-str [o]
   (with-out-str (pprint o)))

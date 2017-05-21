@@ -1,10 +1,10 @@
-(ns timi.datasource.sqlite.task-repo-test
+(ns timi.server.datasource.sqlite.task-repo-test
   (:require
-    [timi.datasource.sqlite.fixtures
-     :refer [*db* sqlite-fixture last-insert-rowid make-task]]
-    [clojure.test :refer [deftest is use-fixtures testing]]
     [clojure.java.jdbc :as db]
-    [timi.domain.task :as task]))
+    [clojure.test :refer [deftest is use-fixtures testing]]
+    [timi.server.datasource.sqlite.fixtures :refer [
+      *db* sqlite-fixture last-insert-rowid make-task]]
+    [timi.server.domain.task :as task]))
 
 (use-fixtures :each sqlite-fixture)
 

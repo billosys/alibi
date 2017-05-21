@@ -1,12 +1,12 @@
-(ns timi.datasource.sqlite.entry-repo-test
+(ns timi.server.datasource.sqlite.entry-repo-test
   (:require
-    [clojure.test :refer [deftest is use-fixtures testing]]
-    [clojure.java.jdbc :as db]
-    [timi.infra.date-time :refer [->local-date ->local-time]]
-    [timi.datasource.sqlite.fixtures
-     :refer [sqlite-fixture *db* last-insert-rowid make-entry]]
     [clojure.data :refer [diff]]
-    [timi.domain.entry :as entry]))
+    [clojure.java.jdbc :as db]
+    [clojure.test :refer [deftest is use-fixtures testing]]
+    [timi.server.datasource.sqlite.fixtures :refer [
+      sqlite-fixture *db* last-insert-rowid make-entry]]
+    [timi.server.domain.entry :as entry]
+    [timi.server.infra.date-time :refer [->local-date ->local-time]]))
 
 (defn insert-entry! [db entry]
   (-> (db/insert! *db* :entries entry)
@@ -74,7 +74,6 @@
                 :end_time "15:00" :user_id 42 :comment "goodbye, world"
                 :task_id 7331 :is_billable 1 :is_billed 1}
                row))))))
-
 
 (deftest delete-entry
   (let [entry (make-entry)

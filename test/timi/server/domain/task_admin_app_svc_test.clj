@@ -1,10 +1,10 @@
-(ns timi.domain.task-admin-app-svc-test
+(ns timi.server.domain.task-admin-app-svc-test
   (:require
-    [timi.domain.task-admin-app-svc :as tasks]
     [clojure.test :refer [is testing]]
-    [timi.datasource.tools :as db-tools]
-    [timi.test-helpers :refer [deftest copy-tests]]
-    [timi.domain.task :as task]))
+    [timi.server.datasource.tools :as db-tools]
+    [timi.server.domain.task :as task]
+    [timi.server.domain.task-admin-app-svc :as tasks]
+    [timi.server.test-helpers :refer [deftest copy-tests]]))
 
 (def ^:dynamic *defaults* nil)
 

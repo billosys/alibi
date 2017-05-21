@@ -1,10 +1,9 @@
-(ns timi.domain.queries.entry-screen.list-all-bookable-projects-and-tasks-test
+(ns timi.server.domain.queries.entry-screen.list-all-bookable-projects-and-tasks-test
   (:require
-    [timi.domain.query-handler
-     :refer [with-handler handle]]
     [clojure.test :refer [is testing]]
-    [timi.datasource.tools :as setup]
-    [timi.test-helpers :refer [deftest copy-tests]]))
+    [timi.server.datasource.tools :as setup]
+    [timi.server.domain.query-handler :refer [with-handler handle]]
+    [timi.server.test-helpers :refer [deftest copy-tests]]))
 
 (defn list-all-bookable-projects-and-tasks []
   (handle :entry-screen/list-all-bookable-projects-and-tasks))

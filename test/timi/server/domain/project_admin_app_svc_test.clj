@@ -1,11 +1,12 @@
-(ns timi.domain.project-admin-app-svc-test
-  (:require [timi.domain.project-admin-app-svc
-             :as projects :refer [new-project!]]
-            [clojure.test :refer [is testing]]
-            [timi.datasource.tools :as db-tools]
-            [timi.config :refer [config]]
-            [timi.test-helpers :refer [deftest copy-tests]]
-            [timi.domain.project :as project]))
+(ns timi.server.domain.project-admin-app-svc-test
+  (:require
+    [clojure.test :refer [is testing]]
+    [timi.config :refer [config]]
+    [timi.server.datasource.tools :as db-tools]
+    [timi.server.domain.project :as project]
+    [timi.server.domain.project-admin-app-svc :as projects :refer [
+      new-project!]]
+    [timi.server.test-helpers :refer [deftest copy-tests]]))
 
 (defn make-valid-new-project-cmd []
   {:project-name "time tracker"

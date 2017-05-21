@@ -1,13 +1,13 @@
-(ns timi.datasource.sqlite.queries-test
+(ns timi.server.datasource.sqlite.queries-test
   (:require
-    [timi.domain.query-handler :refer [handle]]
-    [timi.domain.project :as project]
     [clojure.test :refer [deftest is use-fixtures]]
-    [timi.datasource.sqlite.fixtures
-     :refer [sqlite-fixture *db* make-project make-task make-entry]]
-    [timi.infra.date-time :refer [->local-date]]
-    [timi.domain.task :as task]
-    [timi.domain.entry :as entry]))
+    [timi.server.datasource.sqlite.fixtures :refer [
+      sqlite-fixture *db* make-project make-task make-entry]]
+    [timi.server.domain.entry :as entry]
+    [timi.server.domain.project :as project]
+    [timi.server.domain.query-handler :refer [handle]]
+    [timi.server.domain.task :as task]
+    [timi.server.infra.date-time :refer [->local-date]]))
 
 (def ^:dynamic *defaults* nil)
 
@@ -15,7 +15,6 @@
               (fn [f]
                 (binding [*defaults* {:user-id 1}]
                   (sqlite-fixture f))))
-
 
 (defn insert-project-and-task! []
   (let [project-id (project/add! (make-project))

@@ -1,12 +1,13 @@
-(ns timi.domain.queries.entry-screen.entries-for-day-test
-  (:require [timi.domain.query-handler :refer [handle]]
-            [timi.datasource.tools :as db-tools]
-            [clojure.test :refer [is]]
-            [timi.config :refer [config]]
-            [timi.test-helpers :refer [is-equal]]
-            [timi.infra.date-time :refer [today yesterday]]
-            [clojure.set :refer [rename-keys]]
-            [timi.test-helpers :refer [deftest copy-tests]]))
+(ns timi.server.domain.queries.entry-screen.entries-for-day-test
+  (:require
+    [clojure.set :refer [rename-keys]]
+    [clojure.test :refer [is]]
+    [timi.config :refer [config]]
+    [timi.server.datasource.tools :as db-tools]
+    [timi.server.domain.query-handler :refer [handle]]
+    [timi.server.infra.date-time :refer [today yesterday]]
+    [timi.server.test-helpers :refer [deftest copy-tests]]
+    [timi.server.test-helpers :refer [is-equal]]))
 
 (defn entries-for-day
   [& [datum]]
