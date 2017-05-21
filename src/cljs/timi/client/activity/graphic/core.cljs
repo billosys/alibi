@@ -670,31 +670,11 @@
             ;(log "draw-result" (:els draw-result))
             ;(concat (:els grid) (:els draw-result)))))))
 
-(defn render-change-date-btns
-  [dispatch! selected-date]
-  (let [on-change-date #(dispatch! (actions/time-page-change-date %))
-        selected-date (.parse LocalDate selected-date)]
-    (dom/div
-      nil
-      (dom/button
-        #js {:className "btn btn-default btn-prev-period"
-             :onClick (fn [] (on-change-date (.plusDays selected-date -7)))}
-        (dom/i #js {:className "fa fa-chevron-left fa-lg"
-                    :aria-hidden "true"}))
-      (dom/button
-        #js {:className "btn btn-default btn-period-today"
-             :onClick (fn [] (on-change-date (.now LocalDate)))}
-        "Today")
-      (dom/button
-        #js {:className "btn btn-default btn-next-period"
-             :onClick (fn [] (on-change-date (.plusDays selected-date 7)))}
-        (dom/i #js {:className "fa fa-chevron-right fa-lg"
-                    :aria-hidden "true"})))))
-
 (defn tooltip-component
   [state owner]
-  (let [{:keys [top width left comment ]} state]
+  (let [{:keys [top width left comment]} state]
     (reify
+
       om/IRender
       (render [_]
         (dom/div
@@ -710,6 +690,7 @@
             (dom/div #js {:className "tooltip-arrow"})
             (dom/div #js {:className "tooltip-inner"}
                      comment))))
+
       om/IDidUpdate
       (did-update [_ _ _]
         (let [el (aget (om/get-node owner "element") "children" 0)
@@ -738,6 +719,27 @@
                    #js {:id "activity-svg-container"}
                    svg)))]
     html))
+
+(defn render-change-date-btns
+  [dispatch! selected-date]
+  (let [on-change-date #(dispatch! (actions/time-page-change-date %))
+        selected-date (.parse LocalDate selected-date)]
+    (dom/div
+      nil
+      (dom/button
+        #js {:className "btn btn-default btn-prev-period"
+             :onClick (fn [] (on-change-date (.plusDays selected-date -7)))}
+        (dom/i #js {:className "fa fa-chevron-left fa-lg"
+                    :aria-hidden "true"}))
+      (dom/button
+        #js {:className "btn btn-default btn-period-today"
+             :onClick (fn [] (on-change-date (.now LocalDate)))}
+        "Today")
+      (dom/button
+        #js {:className "btn btn-default btn-next-period"
+             :onClick (fn [] (on-change-date (.plusDays selected-date 7)))}
+        (dom/i #js {:className "fa fa-chevron-right fa-lg"
+                    :aria-hidden "true"})))))
 
 (defn render-navigator
   [{:keys [dispatch! get-state]} owner]
