@@ -39,6 +39,102 @@
          (escape-fn billing-method)
          "</span></div>")))
 
+(defn project-selector-form-group-html
+  [options select-value]
+  (dom/div
+    #js {:className "form-group"
+         :for "post-new-entry-bar-select"}
+    (dom/label
+      #js {:className "col-sm-2 control-label"}
+      "Project:")
+    (dom/div
+      #js {:className "col-sm-10"}
+      (dom/select
+        #js {:name "post-new-entry-bar"
+             :placeholder "Post new entry..."
+             :defaultValue select-value
+             :className "form-control"}
+        (dom/option #js {:value ""} "")
+        (map #(let [value (str (:project-id %) "," (:task-id %))]
+                (dom/option
+                  #js {:key value
+                       :data-project-id (:project-id %)
+                       :data-task-id (:task-id %)
+                       :data-billing-method (:billing-method %)
+                       :value value}
+                  (:text %)))
+             options))
+      (dom/span
+        #js {:className "help-block"}
+        (str "To create a new entry, select a project from the "
+             "dropdown. To update a project's entry, click the "
+             "time element in the appropiate day below.")))))
+
+(def entry-type-radio-form-group-html
+  (dom/div
+    #js {:className "form-group"
+         :for "post-new-entry-bar-type"}
+    (dom/label
+      #js {:className "col-sm-2 control-label"}
+      "Entry Type:")
+    (dom/div
+      #js {:className "col-sm-10"}
+      (dom/label
+        #js {:className "radio-inline"}
+        (dom/input
+          #js {:type "radio"
+               :name "time-entry-type"
+               :value "timer"
+               :disabled "true"}
+          "Timer"))
+      (dom/label
+        #js {:className "radio-inline"}
+        (dom/input
+          #js {:type "radio"
+               :name "time-entry-type"
+               :value "total"
+               :disabled "true"}
+          "Total Time"))
+      (dom/label
+        #js {:className "radio-inline"}
+        (dom/input
+          #js {:type "radio"
+               :name "time-entry-type"
+               :value "range"
+               :checked "true"}
+          "Time Range"))
+      (dom/span
+        #js {:className "help-block"}
+        (str "Select the type of time entry you'd "
+             "like to make.")))))
+
+(defn project-and-entry-type-form-html
+  [options select-value]
+  (dom/form
+    #js {:id "post-new-entry-bar"
+         :className "form-horizontal navbar-form-post-new-entry-bar"
+         :ref "the-form"}
+    (dom/div
+      #js {:className "row"}
+      (dom/div
+        #js {:className "col-md-12"}
+        (dom/fieldset
+          nil
+          (project-selector-form-group-html options select-value)
+          entry-type-radio-form-group-html)))))
+
+(defn project-selector-form-html
+  [options select-value]
+  (dom/form
+    #js {:id "post-new-entry-bar"
+         :className "form-horizontal navbar-form-post-new-entry-bar"
+         :ref "the-form"}
+    (dom/div
+      #js {:className "row"}
+      (dom/div
+        #js {:className "col-md-12"}
+        (project-selector-form-group-html options select-value)))))
+
 (defn entry-bar-form [{:keys [dispatch! get-state]} owner]
   (let [get-selectize (fn [] (.. (js/$ (om/get-node owner "the-form"))
                                  (find "select")
@@ -95,86 +191,16 @@
 
       om/IRender
       (render [_]
-        (let [post-new-entry-bar-state (->> (get-state)
-                                            (state/post-new-entry-bar-cursor)
-                                            (om/observe owner))
-              options (:options post-new-entry-bar-state)
+        (let [options (->> (get-state)
+                           (state/post-new-entry-bar-cursor)
+                           (om/observe owner)
+                           :options)
               {:keys [project-id task-id]} (->> (get-state)
                                                 (state/selected-task-cursor)
                                                 (om/observe owner))
               select-value (if (and project-id task-id)
                              (str project-id "," task-id) "")]
-          (dom/form
-            #js {:id "post-new-entry-bar"
-                 :className "form-horizontal navbar-form-post-new-entry-bar"
-                 :ref "the-form"}
-            (dom/div
-              #js {:className "row"}
-              (dom/div
-                #js {:className "col-md-12"}
-                (dom/fieldset
-                  nil
-                  (dom/div
-                    #js {:className "form-group"
-                         :for "post-new-entry-bar-select"}
-                    (dom/label
-                      #js {:className "col-sm-2 control-label"}
-                      "Project:")
-                    (dom/div
-                      #js {:className "col-sm-10"}
-                      (dom/select
-                        #js {:name "post-new-entry-bar"
-                             :placeholder "Post new entry..."
-                             :defaultValue select-value
-                             :className "form-control"}
-                        (dom/option #js {:value ""} "")
-                        (map #(let [value (str (:project-id %) "," (:task-id %))]
-                                (dom/option
-                                  #js {:key value
-                                       :data-project-id (:project-id %)
-                                       :data-task-id (:task-id %)
-                                       :data-billing-method (:billing-method %)
-                                       :value value}
-                                  (:text %)))
-                             options))
-                      (dom/span
-                        #js {:className "help-block"}
-                        (str "To create a new entry, select a project from the "
-                             "dropdown. To update a project's entry, click the "
-                             "time element in the appropiate day below."))))
-                  (dom/div
-                    #js {:className "form-group"
-                         :for "post-new-entry-bar-type"}
-                    (dom/label
-                      #js {:className "col-sm-2 control-label"}
-                      "Entry Type:")
-                    (dom/div
-                      #js {:className "col-sm-10"}
-                      (dom/label
-                        #js {:className "radio-inline"}
-                        (dom/input
-                          #js {:type "radio"
-                               :name "time-entry-type"
-                               :value "timer"
-                               :disabled "true"}
-                          "Timer"))
-                      (dom/label
-                        #js {:className "radio-inline"}
-                        (dom/input
-                          #js {:type "radio"
-                               :name "time-entry-type"
-                               :value "total"
-                               :disabled "true"}
-                          "Total Time"))
-                      (dom/label
-                        #js {:className "radio-inline"}
-                        (dom/input
-                          #js {:type "radio"
-                               :name "time-entry-type"
-                               :value "range"
-                               :checked "true"}
-                          "Time Range"))
-                      (dom/span
-                        #js {:className "help-block"}
-                        (str "Select the type of time entry you'd "
-                             "like to make.")))))))))))))
+          ;(project-and-entry-type-form-html
+          (project-selector-form-html
+            options
+            select-value))))))
