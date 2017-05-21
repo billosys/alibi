@@ -7,6 +7,7 @@
     [om.core :as om]
     [om.dom :as dom]
     [timi.client.actions :as actions]
+    [timi.client.activity.graphic.draw :as draw]
     [timi.client.logging :refer [log log-cljs]]
     [timi.client.time.state :as state]
     [timi.client.util :refer [parse-float]]))
@@ -24,46 +25,7 @@
 (def default-min-time (.parse LocalTime "08:00"))
 (def default-max-time (.parse LocalTime "18:00"))
 
-(defn get-abs-bounding-client-rect
-  [dom-el]
-  (let [rect (.getBoundingClientRect dom-el)
-        scroll-x (.-scrollX js/window)
-        scroll-y (.-scrollY js/window)]
-    {:top (+ (.-top rect) scroll-y)
-     :left (+ (.-left rect) scroll-x)
-     :right (+ (.-right rect) scroll-x)
-     :bottom (+ (.-bottom rect) scroll-y)
-     :width (.-width rect)
-     :height (.-height rect)}))
-
-(def drawing-contants
-  {:pixels-per-minute 0.2
-   :pixels-per-day 144
-   :left-axis-px 100
-   :project-label-offset-px 5
-   :project-label-vert-offset-px 4
-   :projects {:vertical-offset-px 25}
-   :hour-entry {:height-px 8
-                :active {:color "rgb(240, 153, 45)",
-                         :radius 3
-                         :std-dev 2}}
-   :row-spacing-px 14
-   :day-spacing-px 20
-   :project-spacing-px 20
-   :project-heading-x-px 10
-   :heading-to-rows-px 15
-   :grid-time-label {:x-offset-px 5
-                     :height-px 15}
-   :grid-day-label {:x-offset-px 5
-                    :height-px 20}
-   :day-summary  {:bar {:y-offset-px  8}
-                  :label {:x-offset-px 5
-                          :y-offset-px 15}}
-   :canvas {:bottom-padding-px 10}
-   :no-data {:y-offset-px 50
-             :x-offset-px 540
-             :bottom-padding-px 50}
-   :time-line  {:width-px 8}})
+(def days-order [6 0 1 2 3 4 5])
 
 (defn find-first-monday
   [for-date]
@@ -71,45 +33,6 @@
     (if (= (.dayOfWeek for-date) (.-MONDAY DayOfWeek))
       for-date
       (recur (.plusDays for-date -1)))))
-
-(defn c
-  [el attrs & children]
-  ;(log "attrs %o" attrs)
-  (apply js/React.createElement el attrs children))
-
-(defn svg-glow
-  [id color & {:keys [radius std-dev] :or {:radius 1 :std-dev 1}}]
-  ;from http://stackoverflow.com/a/36564885/345910
-  (str "<filter id='" id "' x='-5000%' y='-5000%' width='10000%' height='10000%'>
-         <feFlood result='flood' flood-color='" color "' flood-opacity='1'></feFlood>
-         <feComposite in='flood' result='mask' in2='SourceGraphic' operator='in'></feComposite>
-         <feMorphology in='mask' result='dilated' operator='dilate' radius='" radius "'></feMorphology>
-         <feGaussianBlur in='dilated' result='blurred' stdDeviation='" std-dev "'></feGaussianBlur>
-         <feMerge>
-           <feMergeNode in='blurred'></feMergeNode>
-           <feMergeNode in='SourceGraphic'></feMergeNode>
-         </feMerge>
-       </filter>"))
-
-(defn draw-result-empty
-  []
-  {:y-offset 0 :els []})
-
-(defn draw-result-append-el
-  [el draw-result]
-  (update draw-result :els conj el))
-
-(defn draw-result-add-to-y
-  [inc draw-result]
-  (update draw-result :y-offset + inc))
-
-(defn draw-result-set-y-offset
-  [y-offset draw-result]
-  (assoc draw-result :y-offset y-offset))
-
-(defn drawing-const
-  [keys & default]
-  (get-in drawing-contants keys default))
 
 (defn bars-sum-duration
   [bars]
@@ -191,31 +114,30 @@
         time (.ofInstant LocalTime instant)]
     (+ (* day minutes-per-day pixels-per-minute)
        (* pixels-per-minute (.until min-time time (.-MINUTES ChronoUnit)))
-       (drawing-const [:left-axis-px]))))
+       (draw/const [:left-axis-px]))))
 
 (defn iterate-day-grid
   [min-time min-date instant-to-x f init-value]
-  (let [days 7]
-    (reduce
-      (fn [acc day-index]
-        (let [get-instant (fn [for-day-index]
-                            (.. min-date
-                                (plusDays for-day-index)
-                                (atTime min-time)
-                                (atZone (.systemDefault ZoneId))
-                                (toInstant)))
-              day-instant (get-instant day-index)
-              next-day-instant (get-instant (inc day-index))
-              x1 (instant-to-x day-instant)
-              x2 (instant-to-x next-day-instant)]
-          (f {:left-x x1
-              :right-x x2
-              :left-instant day-instant
-              :right-instant next-day-instant
-              :is-first (= day-index 0)
-              :is-last (= day-index (dec days))} acc)))
-      init-value
-      (range 0 days))))
+  (reduce
+    (fn [acc day-index]
+      (let [get-instant (fn [for-day-index]
+                          (.. min-date
+                              (plusDays for-day-index)
+                              (atTime min-time)
+                              (atZone (.systemDefault ZoneId))
+                              (toInstant)))
+            day-instant (get-instant day-index)
+            next-day-instant (get-instant (inc day-index))
+            x1 (instant-to-x day-instant)
+            x2 (instant-to-x next-day-instant)]
+        (f {:left-x x1
+            :right-x x2
+            :left-instant day-instant
+            :right-instant next-day-instant
+            :is-first (= day-index (first days-order))
+            :is-last (= day-index (last days-order))} acc)))
+    init-value
+    days-order))
 
 (defn render-grid-labels
   [on-change-date selected-date min-time max-time iterate-day-grid draw-result]
@@ -236,61 +158,45 @@
                (cljs-format/unparse long-formatter)
                (aset date-elem1 "innerHTML"))
           (aset date-elem2 "value" selected-date)
-          (draw-result-append-el
+          (draw/result-append-el
             (dom/text
               #js
               {:className (str "grid-day-label"
                                (when (.equals date selected-date)
                                  " grid-day-label-is-selected"))
                :x (+ left-x
-                     (drawing-const
+                     (draw/const
                        [:grid-day-label :x-offset-px]))
                :y (+ y-offset
-                     (drawing-const
+                     (draw/const
                        [:grid-day-label :height-px]))
                :onClick #(on-change-date date)}
               (date->grid-label
                 (.ofInstant LocalDate left-instant)))
             draw-result))))
-    (draw-result-add-to-y
-      (+ (drawing-const [:grid-day-label :height-px])
-         (drawing-const [:grid-time-label :height-px])))
+    (draw/result-add-to-y
+      (+ (draw/const [:grid-day-label :height-px])
+         (draw/const [:grid-time-label :height-px])))
     (iterate-day-grid
       (fn [{:keys [left-x right-x]} {:keys [y-offset] :as draw-result}]
         (->> draw-result
-             (draw-result-append-el
+             (draw/result-append-el
                (dom/text
                  #js
                  {:className "grid-time-label"
                   :x (+ left-x
-                        (drawing-const [:grid-time-label :x-offset-px]))
+                        (draw/const [:grid-time-label :x-offset-px]))
                   :y y-offset}
                  (str min-time)))
-             (draw-result-append-el
+             (draw/result-append-el
                (dom/text
                 #js
                 {:className "grid-time-label"
                  :x (- right-x
-                       (drawing-const [:grid-time-label :x-offset-px]))
+                       (draw/const [:grid-time-label :x-offset-px]))
                  :y y-offset
                  :textAnchor "end"}
                 (str max-time))))))))
-
-(defn draw-no-data-msg
-  [draw-result]
-  (->> draw-result
-       (draw-result-append-el
-         (dom/text
-           #js
-           {:className "no-data-in-period"
-            :x (drawing-const [:no-data :x-offset-px])
-            :y (+ (:y-offset draw-result)
-                  (drawing-const [:no-data :y-offset-px]))
-            :textAnchor "middle"}
-           "No data for this period"))
-       (draw-result-add-to-y
-         (+ (drawing-const [:no-data :y-offset-px])
-            (drawing-const [:no-data :bottom-padding-px])))))
 
 (defn noop
   [& more]
@@ -306,7 +212,7 @@
                  (instant-to-x (->> bars (map :from)
                                     (sort (fn [a b] (.compareTo a b)))
                                     first))
-                 (drawing-const [:project-label-offset-px]))
+                 (draw/const [:project-label-offset-px]))
 
         introduce-gap-between-adjacent-bars
         (fn [result [first second & more :as bars-with-positions]]
@@ -330,8 +236,8 @@
             (fn [draw-result bar]
               (cond->> draw-result
                 (= (get-in bar [:bar :entry-id]) selected-entry)
-                (draw-result-append-el
-                  (let [height (drawing-const [:hour-entry :height-px])]
+                (draw/result-append-el
+                  (let [height (draw/const [:hour-entry :height-px])]
                     (dom/rect
                       #js
                       {:className "hour-entry-active"
@@ -342,7 +248,7 @@
                        :style #js {:filter "url(#hour-entry-active-glow)"}})))
 
                 :always
-                (draw-result-append-el
+                (draw/result-append-el
                   (dom/line
                    #js
                    {:className (str "time-line hour-line "
@@ -355,7 +261,7 @@
 
                     :onMouseOver
                     (fn [ev]
-                      (let [rect (get-abs-bounding-client-rect
+                      (let [rect (draw/get-abs-bounding-client-rect
                                    (.-target ev))]
                         (on-mouse-over-bar
                           {:entry-id (get-in bar [:bar :entry-id])
@@ -373,28 +279,28 @@
         (fn [draw-result]
           (if-not right-label
             draw-result
-            (draw-result-append-el
+            (draw/result-append-el
               (dom/text
                 #js {:className "project-label project-label-summary"
                      :x (+ (:x2 (last drawable-bars))
-                           (drawing-const [:project-label-offset-px]))
+                           (draw/const [:project-label-offset-px]))
                      :y (+ (:y-offset draw-result)
-                           (drawing-const
+                           (draw/const
                              [:project-label-vert-offset-px]))}
                 right-label)
               draw-result)))]
     (->> draw-result
-         (draw-result-append-el
+         (draw/result-append-el
            (dom/text
              #js {:className "project-label project-label-taskname"
                   :x x-start
                   :y (+ (:y-offset draw-result)
-                        (drawing-const [:project-label-vert-offset-px]))
+                        (draw/const [:project-label-vert-offset-px]))
                   :textAnchor "end"}
             text))
          (draw-bars)
          (draw-right-label)
-         (draw-result-add-to-y (drawing-const [:row-spacing-px])))))
+         (draw/result-add-to-y (draw/const [:row-spacing-px])))))
 
 (defn format-duration
   [duration]
@@ -405,16 +311,16 @@
 
 (defn render-project-heading
   [label start-at-instant draw-result]
-  (let [x (drawing-const [:project-heading-x-px])]
+  (let [x (draw/const [:project-heading-x-px])]
     (->> draw-result
-         (draw-result-append-el
+         (draw/result-append-el
            (dom/text
              #js {:className "project-heading"
                   :x x
                   :y (:y-offset draw-result)}
             label))
-         (draw-result-add-to-y
-           (drawing-const [:heading-to-rows-px])))))
+         (draw/result-add-to-y
+           (draw/const [:heading-to-rows-px])))))
 
 (defn render-project-tasks
   [render-row tasks draw-result]
@@ -439,8 +345,8 @@
            (:label project)
            (get-in tasks [0 :items 0 :from]))
          (render-project-tasks tasks)
-         (draw-result-add-to-y
-           (drawing-const [:project-spacing-px])))))
+         (draw/result-add-to-y
+           (draw/const [:project-spacing-px])))))
 
 (defn render-projects
   [projects render-row draw-result]
@@ -451,8 +357,8 @@
           (reduce #(render-project %2 %1) draw-result projects))]
 
     (->> draw-result
-         (draw-result-add-to-y
-           (drawing-const [:projects :vertical-offset-px]))
+         (draw/result-add-to-y
+           (draw/const [:projects :vertical-offset-px]))
          (draw-projects))))
 
 (defn render-grid
@@ -463,19 +369,18 @@
       (cond->> draw-result
         (.equals (.ofInstant LocalDate left-instant)
                  selected-date)
-        (draw-result-append-el
+        (draw/result-append-el
           (dom/rect
             #js {:className "selected-date-highlight"
                  :x left-x :width (- right-x left-x)
                  :y 0 :height height}))
         true
-        (draw-result-append-el
+        (draw/result-append-el
           (dom/line
             #js {:className "grid-day-separator"
                  :x1 left-x :x2 left-x
                  :y1 0 :y2 height}))))
     draw-result))
-
 
 (defn render-now-indicator
   [instant-to-x min-time max-time height draw-result]
@@ -487,7 +392,7 @@
                  (pos? (.compareTo time max-time))))
       draw-result
       (let [x (- (.floor js/Math (instant-to-x now)) 0.5)]
-        (draw-result-append-el
+        (draw/result-append-el
           (dom/line
             #js {:className "now-indicator"
                  :x1 x :x2 x
@@ -522,7 +427,7 @@
                         :x2 x2
                         :y1 y-offset
                         :y2 y-offset})]
-          (draw-result-append-el el draw-result)))
+          (draw/result-append-el el draw-result)))
       draw-result
       bars)))
 
@@ -531,9 +436,9 @@
   (let [all-bars (mapcat :bars projects)
         total-duration (bars-sum-duration all-bars)
         bar-offset (+ y-offset
-                      (drawing-const [:day-summary :bar :y-offset-px]))
+                      (draw/const [:day-summary :bar :y-offset-px]))
         text-offset (+ bar-offset
-                       (drawing-const [:day-summary :label :y-offset-px]))
+                       (draw/const [:day-summary :label :y-offset-px]))
         min-hours (.ofHours Duration 8)]
     (iterate-day-grid
       (fn [{:keys [right-x left-instant]} draw-result]
@@ -558,11 +463,11 @@
                    non-billable (- bar-offset 0.5)
                    {:bar-classes ["day-summary" "non-billable"
                                   day-complete-class]})
-                 (draw-result-append-el
+                 (draw/result-append-el
                    (dom/text
                      #js {:className "day-summary-label"
                           :x (- right-x
-                                (drawing-const
+                                (draw/const
                                   [:day-summary :label :x-offset-px]))
                           :y text-offset
                           :textAnchor "end"}
@@ -576,7 +481,7 @@
                                 (.toMinutes day-duration))]
                          (str " (" (.floor js/Math (* 100 day-billability))
                               "%)")))))
-                 (draw-result-set-y-offset text-offset)))))
+                 (draw/result-set-y-offset text-offset)))))
       draw-result)))
 
 (defn get-render-fns
@@ -592,7 +497,7 @@
         minutes-per-day (if (pos? minutes-per-day)
                           minutes-per-day
                           (+ minutes-per-day (.. Duration (ofDays 1) toMinutes)))
-        pixels-per-minute (/ (drawing-const [:pixels-per-day]) minutes-per-day)
+        pixels-per-minute (/ (draw/const [:pixels-per-day]) minutes-per-day)
 
         instant-to-x (partial instant-to-x min-time min-date minutes-per-day
                               pixels-per-minute)
@@ -634,17 +539,17 @@
                                          on-change-date)
         has-project-data? (seq projects)
 
-        draw-result (render-grid-labels (draw-result-empty))
+        draw-result (render-grid-labels (draw/result-empty))
         draw-result (if has-project-data?
                       (->> draw-result
                            (render-projects)
                            (render-day-summaries)
-                           (draw-result-add-to-y
-                             (drawing-const [:canvas
-                                             :bottom-padding-px])))
-                      (draw-no-data-msg draw-result))
+                           (draw/result-add-to-y
+                             (draw/const [:canvas
+                                          :bottom-padding-px])))
+                      (draw/no-data-msg draw-result))
         height (:y-offset draw-result)
-        grid (->> (draw-result-empty)
+        grid (->> (draw/result-empty)
                   (render-grid height)
                   (render-now-indicator height))]
     (apply dom/svg
@@ -654,10 +559,13 @@
            :height height}
       (dom/defs
         #js {:dangerouslySetInnerHTML
-             #js {:__html (svg-glow "hour-entry-active-glow"
-                                    (drawing-const [:hour-entry :active :color])
-                                    :radius (drawing-const [:hour-entry :active :radius] 1)
-                                    :std-dev (drawing-const [:hour-entry :active :std-dev] 1))}})
+             #js {:__html (draw/svg-glow
+                            "hour-entry-active-glow"
+                            (draw/const [:hour-entry :active :color])
+                            :radius (draw/const
+                                      [:hour-entry :active :radius] 1)
+                            :std-dev (draw/const
+                                      [:hour-entry :active :std-dev] 1))}})
       ;TODO assign keys
       (concat (:els grid) (:els draw-result)))))
       ;(map-indexed
@@ -694,7 +602,7 @@
       om/IDidUpdate
       (did-update [_ _ _]
         (let [el (aget (om/get-node owner "element") "children" 0)
-              rect (get-abs-bounding-client-rect el)
+              rect (draw/get-abs-bounding-client-rect el)
               px (fn [val] (str val "px"))]
           (aset el "style" "left" (px (- (+ left (/ width 2))
                                          (/ (:width rect) 2))))
@@ -708,17 +616,16 @@
               selected-date
               (init-data project-data)
               #(dispatch! (actions/time-page-change-date %))
-              {:selected-entry selected-entry-id})
-        html (dom/div
-               nil
-               (dom/div
-                 #js {:className "row"}
-                 (dom/div
-                   #js {:className "col-md-12"})
-                 (dom/div
-                   #js {:id "activity-svg-container"}
-                   svg)))]
-    html))
+              {:selected-entry selected-entry-id})]
+    (dom/div
+      nil
+      (dom/div
+        #js {:className "row"}
+        (dom/div
+          #js {:className "col-md-12"})
+        (dom/div
+          #js {:id "activity-svg-container"}
+          svg)))))
 
 (defn render-change-date-btns
   [dispatch! selected-date]
