@@ -1,12 +1,14 @@
 (ns timi.cli
   (:require
     [clojure.pprint :refer [pprint]]
-    [timi.datasource.sqlite.migrations :refer [apply-migrations!]]
-    [timi.domain.billing-method :refer [billing-method?]]
-    [timi.domain.project :as project]
-    [timi.domain.project-admin-app-svc :as projects]
-    [timi.domain.task-admin-app-svc :as tasks]
-    [timi.util :refer [str->decimal str->int str->keyword]]))
+    [timi.config :as config]
+    [timi.server.datasource.core :as datasource]
+    [timi.server.datasource.sqlite.migrations :refer [apply-migrations!]]
+    [timi.server.domain.billing-method :refer [billing-method?]]
+    [timi.server.domain.project :as project]
+    [timi.server.domain.project-admin-app-svc :as projects]
+    [timi.server.domain.task-admin-app-svc :as tasks]
+    [timi.server.util :refer [str->decimal str->int str->keyword]]))
 
 (defn args->map [args]
   (into {} (map (fn [[k v]] [(str->keyword k) v]) (partition 2 args))))
@@ -126,9 +128,17 @@
       (recur more val)
       (apply val more))))
 
+(def config (timi.config/read-config))
 
 (defn cli-main [& args]
   (invoke-cli-function args cli-structure))
 
 (defmacro cli-clj [& args]
   `(apply cli-main '~(map str args)))
+
+(defn -main [& args]
+  (let [persistence-middleware (datasource/get-persistence-middleware config)]
+    (persistence-middleware (fn [] (apply cli-main args)))))
+
+(defmacro cli [& args]
+  `(-main ~@(map str args)))
