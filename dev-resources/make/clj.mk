@@ -1,5 +1,5 @@
 build-clj:
-	@lein with-profile +local,+uberjar uberjar
+	@lein with-profile +local,+uberjar compile
 
 clean-clj:
 	@lein clean
