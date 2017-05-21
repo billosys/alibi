@@ -40,14 +40,16 @@
   (GET "/*" {{resource-path :*} :route-params}
        (fn [req]
          (let [resp (some->
-                      (response/resource-response (str "public/" resource-path))
+                      (response/resource-response
+                        (str "public/" resource-path))
                       ((fn [resp]
                          (if-let [mime-type (mime/ext-mime-type resource-path)]
                            (response/content-type resp mime-type)
                            resp))))]
-           (if resp
+           (or
              resp
-             (response/not-found (str "Could not find " resource-path)))))))
+             (response/not-found
+               (str "Could not find " resource-path)))))))
 
 (defroutes all
   (GET "/"

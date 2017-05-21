@@ -23,8 +23,7 @@
 (defn- make-time-from-sql-value
   [v]
   (let [millis (.getTime v)]
-    (. (DateTime. millis ^DateTimeZone mysql-timezone)
-       (withZoneRetainFields db-timezone))))
+    (.withZoneRetainFields (DateTime. millis mysql-timezone) db-timezone)))
 
 (defn- make-sql-time
   [obj]
