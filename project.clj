@@ -148,5 +148,6 @@
       ["lint"]
       ["test"]
       ["compile"]
-      ["uberjar"]]
+      ["uberjar"]
+      ["cljsbuild" "once"]]
     "timi-deploy" ["with-profile" "build" "deploy" "clojars"]})
