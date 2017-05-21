@@ -1,4 +1,4 @@
-(ns timi.logging)
+(ns timi.client.logging)
 
 (def log-count (atom 0))
 

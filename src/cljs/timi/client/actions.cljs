@@ -1,8 +1,8 @@
-(ns timi.actions
+(ns timi.client.actions
   (:require
-    [timi.activity-graphic-data-source :as ag-ds]
-    [timi.time-page-state :as state]
-    [time.core :as time]))
+    [time.core :as time]
+    [timi.client.activity.graphic.data :as activity-data]
+    [timi.client.time.state :as state]))
 
 (defn change-view-period [for-date data]
   {:action :change-view-period
@@ -22,7 +22,7 @@
   (fn [dispatch! state]
     (let [date-str (.toString new-date)
           monday-before (.toString (time/find-monday-before date-str))]
-      (ag-ds/fetch-data
+      (activity-data/fetch-data
         monday-before
         (state/entries-cache state)
         {:on-fetching #(dispatch! (entries-loading-cache monday-before))

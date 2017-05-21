@@ -1,15 +1,15 @@
-(ns timi.activity-graphic
+(ns timi.client.activity.graphic.core
   (:require
-    [cljs-time.format :as cljs-format]
     [cljs-time.coerce :as cljs-coerce]
+    [cljs-time.format :as cljs-format]
+    [clojure.string :as string]
     [clojure.walk :refer [keywordize-keys]]
-    [timi.logging :refer [log log-cljs]]
     [om.core :as om]
     [om.dom :as dom]
-    [clojure.string :as string]
-    [timi.time-page-state :as state]
-    [timi.post-entry-form :as post-entry-form]
-    [timi.actions :as actions]))
+    [timi.client.actions :as actions]
+    [timi.client.logging :refer [log log-cljs]]
+    [timi.client.time.state :as state]
+    [timi.client.util :refer [parse-float]]))
 
 (def ZoneId (. js/JSJoda -ZoneId))
 (def LocalDate (. js/JSJoda -LocalDate))
@@ -23,10 +23,6 @@
 (def long-formatter (cljs-format/formatter long-format))
 (def default-min-time  (. LocalTime parse "08:00"))
 (def default-max-time  (. LocalTime parse "18:00"))
-
-(defn parse-float
-  [n]
-  (js/parseFloat n))
 
 (defn get-abs-bounding-client-rect
   [dom-el]
@@ -227,11 +223,16 @@
       (fn [{:keys [left-x left-instant]}
            {:keys [y-offset] :as draw-result}]
         (let [date (.ofInstant LocalDate left-instant)
-              date-elem (. js/document getElementById "entries-for-day-date")]
-          (set! (. date-elem -innerHTML)
-                (->> (. selected-date toString)
-                     (cljs-coerce/from-string)
-                     (cljs-format/unparse long-formatter)))
+              date-elem1 (. js/document getElementById "entries-for-day-date")
+              date-elem2 (. js/document getElementById "day-entry-table-for-date")]
+          ;; XXX these next two are hacks until I get to know Om better ... at
+          ;;     which point, the elements will receive broadcast signals or
+          ;;     somesuch.
+          (->> (. selected-date toString)
+               (cljs-coerce/from-string)
+               (cljs-format/unparse long-formatter)
+               (aset date-elem1 "innerHTML"))
+          (aset date-elem2 "value" selected-date)
           (->> draw-result
                (draw-result-append-el
                  (dom/text

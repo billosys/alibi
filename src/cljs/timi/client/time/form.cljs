@@ -1,18 +1,14 @@
-(ns timi.post-entry-form
+(ns timi.client.time.form
   (:require
-    [clojure.walk :refer [keywordize-keys]]
     [clojure.string :as string]
-    [timi.logging :refer [log log-cljs]]
-    [time.core :refer [expand-time]]
+    [clojure.walk :refer [keywordize-keys]]
     [om.core :as om]
     [om.dom :as dom]
-    [timi.actions :as actions]
-    [timi.time-page-state :as state
-     :refer []]))
-
-(defn parse-float
-  [v]
-  (js/parseFloat v))
+    [time.core :refer [expand-time]]
+    [timi.client.actions :as actions]
+    [timi.client.logging :refer [log log-cljs]]
+    [timi.client.time.state :as state :refer []]
+    [timi.client.util :refer [parse-float]]))
 
 (defn active-errors
   [form]

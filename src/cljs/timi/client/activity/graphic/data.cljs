@@ -1,6 +1,6 @@
-(ns timi.activity-graphic-data-source
+(ns timi.client.activity.graphic.data
   (:require
-    [timi.logging :refer [log log-cljs]]))
+    [timi.client.logging :refer [log log-cljs]]))
 
 (def ^:private outstanding-promises (atom {}))
 

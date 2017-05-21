@@ -1,16 +1,13 @@
-(ns timi.post-new-entry-bar
+(ns timi.client.time.project
   (:require
-    [cljsjs.react]
-    [timi.logging :refer [log log-cljs]]
     [clojure.string :refer [split]]
     [goog.string :as gstring]
     [goog.string.format]
     [om.core :as om]
     [om.dom :as dom]
-    [timi.time-page-state :as state]))
-
-(defn parse-float [v]
-  (js/parseFloat v))
+    [timi.client.logging :refer [log log-cljs]]
+    [timi.client.time.state :as state]
+    [timi.client.util :refer [parse-float]]))
 
 (defn parse-selected-item [v]
   (when (seq v)

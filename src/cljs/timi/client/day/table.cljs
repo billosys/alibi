@@ -1,5 +1,6 @@
-(ns timi.day-entry-table
-  (:require [timi.logging :refer [log]]))
+(ns timi.client.day.table
+  (:require
+    [timi.client.logging :refer [log]]))
 
 (defn current-selected-date-el []
   (.getElementById js/document "day-entry-table-for-date"))

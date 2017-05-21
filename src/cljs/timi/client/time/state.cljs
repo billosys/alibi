@@ -1,12 +1,12 @@
-(ns timi.time-page-state
+(ns timi.client.time.state
   (:require
    [cljs.reader]
    [clojure.data]
-   [timi.activity-graphic-data-source :as ag-ds]
    [om.core :as om]
-   [timi.logging :refer [log]]
-   [time.core :refer [str->unix unix->date-str unix->time-str try-parse-time
-                      expand-time]]))
+   [time.core :refer [
+     str->unix unix->date-str unix->time-str try-parse-time expand-time]]
+   [timi.client.activity.graphic.data :as ag-ds]
+   [timi.client.logging :refer [log]]))
 
 (let [view-data-input (js/document.getElementById  "view-data")
       view-data (cljs.reader/read-string (.-value view-data-input))]
