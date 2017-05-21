@@ -27,6 +27,10 @@ main {
   background-color: #3d4c5c;
 }
 
+/*
+ * General Forms
+ */
+
 .form-inline .time-entry-input {
 }
 
@@ -53,6 +57,27 @@ main {
 
 .input-group-datepicker {
 }
+
+/*
+ * Date navigator
+ */
+
+#date-navigator-container {
+  maring-bottom: 0;
+  margin-right: 0.5em;
+}
+
+#date-navigator-container,
+#date-navigator-container a,
+#date-navigator-container a:link,
+#date-navigator-container a:hover {
+  background-color: transparent;
+  border: 0;
+}
+
+/*
+ * Activity graphic
+ */
 
 .activity-graphic-row {
   margin: 1px;
@@ -186,6 +211,10 @@ main {
   stroke-width: 1;
 }
 
+/*
+ * Day Entry
+ */
+
 .row-entry-form {
     margin: 1px;
 }
@@ -230,6 +259,18 @@ main {
 .entry-form.form-horizontal .checkbox {
   padding-top: 0px;
 }
+
+.entry-form-errors {
+  display: none;
+}
+
+.entry-form-errors-has-errors {
+  display: block;
+}
+
+/*
+ * Day Entry
+ */
 
 .day-entry-table-row {
   margin-top: 1.5em;
@@ -313,14 +354,6 @@ main {
 #post-new-entry-bar .selectize-input .option-selected .billing-method-badge{
   position: absolute;
   right: 30px;
-}
-
-.entry-form-errors {
-  display: none;
-}
-
-.entry-form-errors-has-errors {
-  display: block;
 }
 
 footer {
