@@ -1,8 +1,8 @@
 (ns time.core
   (:require [clojure.string :as string]))
 
-(def LocalDate (. js/JSJoda -LocalDate))
-(def DayOfWeek (. js/JSJoda -DayOfWeek))
+(def LocalDate (.-LocalDate js/JSJoda))
+(def DayOfWeek (.-DayOfWeek js/JSJoda))
 
 (defn parse-float [v]
   (js/parseFloat v))
@@ -66,18 +66,21 @@
            time-formatter))
 
 (defn unix->date-str [epoch]
-  (.toString (js/JSJoda.LocalDate.ofInstant (js/JSJoda.Instant.ofEpochSecond epoch))))
+  (-> epoch
+      (js/JSJoda.Instant.ofEpochSecond)
+      (js/JSJoda.LocalDate.ofInstant)
+      (str)))
 
 (defn try-parse-time [v]
   (when-not (= v "24:00") ; 24:00 is parsed to 0:00, everything above 24:00
                           ; fails to parse
     (try
-      (.. js/JSJoda -LocalTime (from (. time-formatter parse v)))
+      (.. js/JSJoda -LocalTime (from (.parse time-formatter v)))
       (catch js/Error e
         nil))))
 
 (defn find-monday-before [for-date]
-  (if (string? for-date) (recur (. LocalDate parse for-date))
-    (if (= (. for-date dayOfWeek) (.-MONDAY DayOfWeek))
+  (if (string? for-date) (recur (.parse LocalDate for-date))
+    (if (= (.dayOfWeek for-date) (.-MONDAY DayOfWeek))
       for-date
-      (recur (. for-date plusDays -1)))))
+      (recur (.plusDays for-date -1)))))

@@ -20,8 +20,8 @@
 
 (defn entries-load-data [new-date]
   (fn [dispatch! state]
-    (let [date-str (.toString new-date)
-          monday-before (.toString (time/find-monday-before date-str))]
+    (let [date-str (str new-date)
+          monday-before (str (time/find-monday-before date-str))]
       (activity-data/fetch-data
         monday-before
         (state/entries-cache state)
