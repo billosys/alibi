@@ -11,18 +11,18 @@
     [timi.client.time.state :as state]
     [timi.client.util :refer [parse-float]]))
 
-(def ZoneId (. js/JSJoda -ZoneId))
-(def LocalDate (. js/JSJoda -LocalDate))
-(def LocalTime (. js/JSJoda -LocalTime))
-(def ChronoUnit (. js/JSJoda -ChronoUnit))
-(def Duration (. js/JSJoda -Duration))
-(def DayOfWeek (. js/JSJoda -DayOfWeek))
-(def Instant (. js/JSJoda -Instant))
+(def ZoneId (.-ZoneId js/JSJoda))
+(def LocalDate (.-LocalDate js/JSJoda))
+(def LocalTime (.-LocalTime js/JSJoda))
+(def ChronoUnit (.-ChronoUnit js/JSJoda))
+(def Duration (.-Duration js/JSJoda))
+(def DayOfWeek (.-DayOfWeek js/JSJoda))
+(def Instant (.-Instant js/JSJoda))
 
 (def long-format "EEEE, d MMMM yyyy")
 (def long-formatter (cljs-format/formatter long-format))
-(def default-min-time  (. LocalTime parse "08:00"))
-(def default-max-time  (. LocalTime parse "18:00"))
+(def default-min-time (.parse LocalTime "08:00"))
+(def default-max-time (.parse LocalTime "18:00"))
 
 (defn get-abs-bounding-client-rect
   [dom-el]
@@ -67,10 +67,10 @@
 
 (defn find-first-monday
   [for-date]
-  (if (string? for-date) (recur (. LocalDate parse for-date))
-    (if (= (. for-date dayOfWeek) (.-MONDAY DayOfWeek))
+  (if (string? for-date) (recur (.parse LocalDate for-date))
+    (if (= (.dayOfWeek for-date) (.-MONDAY DayOfWeek))
       for-date
-      (recur (. for-date plusDays -1)))))
+      (recur (.plusDays for-date -1)))))
 
 (defn c
   [el attrs & children]
@@ -113,15 +113,16 @@
 
 (defn bars-sum-duration
   [bars]
-  (. Duration ofMinutes
-     (reduce (fn [sum {:keys [from till] :as next}]
-               (+ sum (. from until till (.-MINUTES ChronoUnit))))
-             0 bars)))
+  (.ofMinutes
+    Duration
+    (reduce (fn [sum {:keys [from till] :as next}]
+              (+ sum (.until from till (.-MINUTES ChronoUnit))))
+            0 bars)))
 
 (defn bars-merge
   [bars]
   (letfn [(bars-overlap? [a b]
-            (if (< (.compareTo (:from b) (:from a)) 0)
+            (if (neg? (.compareTo (:from b) (:from a)))
               (recur b a)
               (>= (.compareTo (:till a) (:from b)) 0)))
 
@@ -141,7 +142,7 @@
 
 (defn date->grid-label
   [for-date]
-  (str (. for-date dayOfWeek)))
+  (str (.dayOfWeek for-date)))
 
 (defn init-data
   [project-data]
@@ -150,8 +151,8 @@
        (map (fn [{:keys [from till task-id] :as project-row}]
               (assoc project-row
                      :task-id (parse-float task-id)
-                     :from (. Instant ofEpochSecond from)
-                     :till (. Instant ofEpochSecond till))))
+                     :from (.ofEpochSecond Instant from)
+                     :till (.ofEpochSecond Instant till))))
        (group-by :project)
        (map (fn [[k vs]]
               {:label k
@@ -162,33 +163,34 @@
 
 (defn calc-min-max-time
   [projects]
-  (cond (= 0 (count projects)) [default-min-time
-                                default-max-time]
-        :else
-        [(->> projects
-              (mapcat :bars)
-              (map #(.ofInstant LocalTime (:from %)))
-              (sort (fn [a b] (. a compareTo b)))
-              (take 1)
-              (map #(. % truncatedTo (.-HOURS ChronoUnit)))
-              (first))
-         (->> projects
-              (mapcat :bars)
-              (map #(.ofInstant LocalTime (:till %)))
-              (sort (fn [a b] (. b compareTo a)))
-              (take 1)
-              (map #(. % truncatedTo (.-HOURS ChronoUnit)))
-              (map #(.plusHours % 1))
-              (first))]))
+  (cond
+    (zero? (count projects))
+      [default-min-time default-max-time]
+    :else
+      [(->> projects
+            (mapcat :bars)
+            (map #(.ofInstant LocalTime (:from %)))
+            (sort (fn [a b] (.compareTo a b)))
+            (take 1)
+            (map #(.truncatedTo % (.-HOURS ChronoUnit)))
+            (first))
+       (->> projects
+            (mapcat :bars)
+            (map #(.ofInstant LocalTime (:till %)))
+            (sort (fn [a b] (.compareTo b a)))
+            (take 1)
+            (map #(.truncatedTo % (.-HOURS ChronoUnit)))
+            (map #(.plusHours % 1))
+            (first))]))
 
 (defn instant-to-x
   [min-time min-date minutes-per-day pixels-per-minute instant]
-  (let [day (. min-date until
-               (. LocalDate ofInstant instant)
-               (. ChronoUnit -DAYS))
-        time (. LocalTime ofInstant instant)]
+  (let [day (.until min-date
+              (.ofInstant LocalDate instant)
+              (.-DAYS ChronoUnit))
+        time (.ofInstant LocalTime instant)]
     (+ (* day minutes-per-day pixels-per-minute)
-       (* pixels-per-minute (. min-time until time (. ChronoUnit -MINUTES)))
+       (* pixels-per-minute (.until min-time time (.-MINUTES ChronoUnit)))
        (drawing-const [:left-axis-px]))))
 
 (defn iterate-day-grid
@@ -200,7 +202,7 @@
                             (.. min-date
                                 (plusDays for-day-index)
                                 (atTime min-time)
-                                (atZone (. ZoneId systemDefault))
+                                (atZone (.systemDefault ZoneId))
                                 (toInstant)))
               day-instant (get-instant day-index)
               next-day-instant (get-instant (inc day-index))
@@ -223,32 +225,33 @@
       (fn [{:keys [left-x left-instant]}
            {:keys [y-offset] :as draw-result}]
         (let [date (.ofInstant LocalDate left-instant)
-              date-elem1 (. js/document getElementById "entries-for-day-date")
-              date-elem2 (. js/document getElementById "day-entry-table-for-date")]
+              date-elem1 (.getElementById js/document "entries-for-day-date")
+              date-elem2 (.getElementById js/document "day-entry-table-for-date")]
           ;; XXX these next two are hacks until I get to know Om better ... at
           ;;     which point, the elements will receive broadcast signals or
           ;;     somesuch.
-          (->> (. selected-date toString)
+          (->> selected-date
+               (str)
                (cljs-coerce/from-string)
                (cljs-format/unparse long-formatter)
                (aset date-elem1 "innerHTML"))
           (aset date-elem2 "value" selected-date)
-          (->> draw-result
-               (draw-result-append-el
-                 (dom/text
-                   #js
-                   {:className (str "grid-day-label"
-                                    (when (.equals date selected-date)
-                                      " grid-day-label-is-selected"))
-                    :x (+ left-x
-                          (drawing-const
-                            [:grid-day-label :x-offset-px]))
-                    :y (+ y-offset
-                          (drawing-const
-                            [:grid-day-label :height-px]))
-                    :onClick #(on-change-date date)}
-                   (-> (. LocalDate ofInstant left-instant)
-                       date->grid-label)))))))
+          (draw-result-append-el
+            (dom/text
+              #js
+              {:className (str "grid-day-label"
+                               (when (.equals date selected-date)
+                                 " grid-day-label-is-selected"))
+               :x (+ left-x
+                     (drawing-const
+                       [:grid-day-label :x-offset-px]))
+               :y (+ y-offset
+                     (drawing-const
+                       [:grid-day-label :height-px]))
+               :onClick #(on-change-date date)}
+              (date->grid-label
+                (.ofInstant LocalDate left-instant)))
+            draw-result))))
     (draw-result-add-to-y
       (+ (drawing-const [:grid-day-label :height-px])
          (drawing-const [:grid-time-label :height-px])))
@@ -262,7 +265,7 @@
                   :x (+ left-x
                         (drawing-const [:grid-time-label :x-offset-px]))
                   :y y-offset}
-                 (.toString min-time)))
+                 (str min-time)))
              (draw-result-append-el
                (dom/text
                 #js
@@ -271,7 +274,7 @@
                        (drawing-const [:grid-time-label :x-offset-px]))
                  :y y-offset
                  :textAnchor "end"}
-                (.toString max-time))))))))
+                (str max-time))))))))
 
 (defn draw-no-data-msg
   [draw-result]
@@ -301,7 +304,7 @@
    draw-result]
   (let [x-start (-
                  (instant-to-x (->> bars (map :from)
-                                    (sort (fn [a b] (. a compareTo b)))
+                                    (sort (fn [a b] (.compareTo a b)))
                                     first))
                  (drawing-const [:project-label-offset-px]))
 
@@ -370,16 +373,16 @@
         (fn [draw-result]
           (if-not right-label
             draw-result
-            (->> draw-result
-                 (draw-result-append-el
-                   (dom/text
-                     #js {:className "project-label project-label-summary"
-                          :x (+ (:x2 (last drawable-bars))
-                                (drawing-const [:project-label-offset-px]))
-                          :y (+ (:y-offset draw-result)
-                                (drawing-const
-                                  [:project-label-vert-offset-px]))}
-                    right-label)))))]
+            (draw-result-append-el
+              (dom/text
+                #js {:className "project-label project-label-summary"
+                     :x (+ (:x2 (last drawable-bars))
+                           (drawing-const [:project-label-offset-px]))
+                     :y (+ (:y-offset draw-result)
+                           (drawing-const
+                             [:project-label-vert-offset-px]))}
+                right-label)
+              draw-result)))]
     (->> draw-result
          (draw-result-append-el
            (dom/text
@@ -395,11 +398,10 @@
 
 (defn format-duration
   [duration]
-  (let [hours (.. duration toHours toString)
-        minutes (.toString (mod (. duration toMinutes) 60))
+  (let [hours (str (.toHours duration))
+        minutes (str (mod (.toMinutes duration) 60))
         minutes (if (< (count minutes) 2) (str "0" minutes) minutes)]
     (str hours ":" minutes)))
-
 
 (defn render-project-heading
   [label start-at-instant draw-result]
@@ -480,9 +482,9 @@
   (let [now (.now Instant)
         time (.ofInstant LocalTime now)
         max-time-is-midnight? (.equals (.-MIDNIGHT LocalTime) max-time)]
-    (if (or (< (.compareTo time min-time) 0)
+    (if (or (neg? (.compareTo time min-time))
             (and (not max-time-is-midnight?)
-                 (> (.compareTo time max-time) 0)))
+                 (pos? (.compareTo time max-time))))
       draw-result
       (let [x (- (.floor js/Math (instant-to-x now)) 0.5)]
         (draw-result-append-el
@@ -495,8 +497,8 @@
 (defn bars-filter-date
   [date bars]
   (filter
-    #(let [bar-date (. LocalDate ofInstant (:from %))]
-       (= 0 (.compareTo bar-date date)))
+    #(let [bar-date (.ofInstant LocalDate (:from %))]
+       (zero? (.compareTo bar-date date)))
     bars))
 
 (defn bars-filter-billable
@@ -532,17 +534,17 @@
                       (drawing-const [:day-summary :bar :y-offset-px]))
         text-offset (+ bar-offset
                        (drawing-const [:day-summary :label :y-offset-px]))
-        min-hours (. Duration ofHours 8)]
+        min-hours (.ofHours Duration 8)]
     (iterate-day-grid
       (fn [{:keys [right-x left-instant]} draw-result]
-        (let [date (. LocalDate ofInstant left-instant)
+        (let [date (.ofInstant LocalDate left-instant)
               day-bars (bars-filter-date date all-bars)
               billable (bars-merge (bars-filter-billable true day-bars))
               non-billable (bars-merge
                              (bars-filter-billable false day-bars))
               day-duration (bars-sum-duration day-bars)
               day-complete-class
-              (if (>= (. day-duration compareTo min-hours) 0)
+              (if (>= (.compareTo day-duration min-hours) 0)
                 "day-complete-complete"
                 "day-complete-not-complete")]
           (if-not (seq day-bars)
@@ -577,7 +579,6 @@
                  (draw-result-set-y-offset text-offset)))))
       draw-result)))
 
-
 (defn get-render-fns
   [dispatch!
    selected-date-str
@@ -587,8 +588,8 @@
   (let [selected-date (.parse LocalDate selected-date-str)
         min-date (find-first-monday selected-date)
         [min-time max-time] (calc-min-max-time projects)
-        minutes-per-day (. min-time until max-time (. ChronoUnit -MINUTES))
-        minutes-per-day (if (> minutes-per-day 0)
+        minutes-per-day (.until min-time max-time (.-MINUTES ChronoUnit))
+        minutes-per-day (if (pos? minutes-per-day)
                           minutes-per-day
                           (+ minutes-per-day (.. Duration (ofDays 1) toMinutes)))
         pixels-per-minute (/ (drawing-const [:pixels-per-day]) minutes-per-day)
@@ -633,8 +634,7 @@
                                          on-change-date)
         has-project-data? (seq projects)
 
-        draw-result (-> (draw-result-empty)
-                        (render-grid-labels))
+        draw-result (render-grid-labels (draw-result-empty))
         draw-result (if has-project-data?
                       (->> draw-result
                            (render-projects)
