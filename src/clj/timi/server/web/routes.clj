@@ -62,6 +62,14 @@
   (GET "/"
        []
        (response/redirect "/time"))
+  (GET "/authorize"
+       request
+       request)
+  (GET "/logout"
+       {session :session}
+       (-> "/"
+           (response/redirect)
+           (assoc :session (dissoc session :identity))))
   (routes time-routes
           docs-routes
           projects-routes

@@ -6,12 +6,14 @@
     [buddy.core.keys :as keys]
     [buddy.sign.jwt :as jwt]
     [ring.util.response :as response]
+    [timi.server.identity.github :as github]
     [timi.server.identity.openid-connect :as openid]
     [timi.server.infra.date-time :as date-time]))
 
 (defn get-auth-backends
   [config]
-  {:openid (fn [] (openid/backend (:openid config)))
+  {:github (fn [] (github/backend (:github config)))
+   :openid (fn [] (openid/backend (:openid config)))
    :single-user (fn []
                   (get-in config
                           [:single-user :username]
