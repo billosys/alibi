@@ -30,7 +30,7 @@ Tímı is a project time-tracking tool intended for use by uindividuals, non-pro
 
 Tímı in action:
 
-![Tími screenshot](docs/screenshot-2.png)
+![Tími screenshot](resources/docs/screenshot-2.png)
 
 
 ## Features [&#x219F;](#contents)
@@ -61,7 +61,10 @@ The prerequisites for this route are:
 
 ## Documentation [&#x219F;](#contents)
 
-Forthcoming ...
+In addition to this README, there is documentation availble once the
+application is running:
+
+* http://localhost:5099/docs
 
 
 ## Usage [&#x219F;](#contents)

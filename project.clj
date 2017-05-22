@@ -20,6 +20,7 @@
     [compojure "1.6.0"]
     [crypto-random "1.2.0"]
     [http-kit "2.2.0"]
+    [markdown-clj "0.9.99"]
     [mysql/mysql-connector-java "6.0.6"]
     [org.clojure/clojure "1.8.0"]
     [org.clojure/data.json "0.2.6"]
@@ -35,8 +36,6 @@
     [ring/ring-codec "1.0.1"]
     [ring/ring-core "1.6.1"]
     [selmer "1.10.7" :exclusions [joda-time]]]
-  :repl-options {
-    :init-ns timi.dev}
   :plugins [
     [cider/cider-nrepl "0.10.0"]
     [lein-cljsbuild "1.1.4" :exclusions [[org.clojure/clojure]]]
@@ -104,8 +103,8 @@
         "dev-resources/src"]
       :repl-options {
         :init (set! *print-length* 50)
-        :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]
-        }
+        :init-ns timi.dev
+        :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
       :resource-paths ["config/dev"]
       :clean-targets ^{:protect false}
         ["resources/public/dist/cljs" :target-path]}

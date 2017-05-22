@@ -30,7 +30,12 @@
 (defroutes docs-routes
   (GET "/docs"
        request
-       (docs-screen/get-page request)))
+       (docs-screen/get-page request))
+  (GET "/docs/*"
+       request
+       (docs-screen/get-page
+         request
+         (get-in request [:route-params :*]))))
 
 (defroutes projects-routes
   (GET "/projects"
