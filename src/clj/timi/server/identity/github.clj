@@ -48,8 +48,7 @@
      (parse-identity [response-body]
        (log/debug "Parsing fetch-identity response ...")
        (log/debug "Response:" response-body)
-       (-> response-body
-           (json/read-str :key-fn keyword)))
+       (json/read-str response-body :key-fn keyword))
 
      (request-identity [access-token]
        (log/debug "Requesting user identity ...")
