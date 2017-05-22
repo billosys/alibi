@@ -25,7 +25,10 @@
 
 ## About [&#x219F;](#contents)
 
-Tímı is a project time-tracking tool intended for use by uindividuals, non-profits, and small companies.
+Tímı is a project time-tracking tool intended for use by individuals,
+non-profits, and small companies, originally based on
+[Infi Alibi Time Tracker](https://github.com/infi-nl/alibi) (more on
+that in the [History](#history-) section below.)
 
 
 ## Screenshot [&#x219F;](#contents)
