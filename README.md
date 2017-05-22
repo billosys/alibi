@@ -5,6 +5,7 @@
 
 [![][logo]][logo-large]
 
+
 #### Contents
 
 * [About](#about-)
@@ -21,6 +22,7 @@
 * [History](#history-)
 * [License](#license-)
 
+
 ## About [&#x219F;](#contents)
 
 Tímı is a project time-tracking tool intended for use by uindividuals, non-profits, and small companies.
@@ -30,7 +32,7 @@ Tímı is a project time-tracking tool intended for use by uindividuals, non-pro
 
 Tímı in action:
 
-![Tími screenshot](resources/docs/screenshot-2.png)
+![Tími screenshot](resources/docs/images/screenshot-2.png)
 
 
 ## Features [&#x219F;](#contents)
@@ -68,6 +70,7 @@ application is running:
 
 
 ## Usage [&#x219F;](#contents)
+
 
 ### Initialization [&#x219F;](#contents)
 
