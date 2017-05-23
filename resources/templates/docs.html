@@ -1,5 +1,14 @@
 {% extends "templates/layout.html" %}
 
+{% block stylesheets %}
+<link rel="stylesheet"
+      type="text/css"
+      href="/css/docs.css" />
+<link rel="stylesheet"
+      type="text/css"
+      href="/css/paraiso-dark.css" />
+{% endblock %}
+
 {% block top-nav %}
 {% include "templates/header.html" with active="docs" %}
 {% endblock %}
@@ -7,4 +16,9 @@
 {% block body %}
 <h2>Documentation</h2>
 {{ markdown|safe }}
+{% endblock %}
+
+{% block javascript %}
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
