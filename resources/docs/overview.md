@@ -13,9 +13,9 @@ The following docs are available for Tímı:
 * **DEVELOPMENT**
     * [API Reference](docs/url) - Codox-generated source code documentation
 * **DESIGN / UX**
-    * [Bootswatch Theme](url)
-    * [Bootstrap CSS](url)
-    * [Bootstrap Components](url)
+    * [Bootswatch Theme](/static/bootswatch/theme.html)
+    * [Bootstrap CSS](/static/bootstrap/css.html)
+    * [Bootstrap Components](/static/bootstrap/components.html)
 * **ARCHITECTURE**
     * [Server-side Overview](docs/arch/server-side)
     * [Client-side Overview](docs/arch/client-side) - This includes an intro to
