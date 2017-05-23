@@ -4,6 +4,7 @@
     [ring.util.mime-type :as mime]
     [ring.util.response :as response]
     [timi.server.web.screens.docs :as docs-screen]
+    [timi.server.web.screens.generic :as generic-screen]
     [timi.server.web.screens.projects :as projects-screen]
     [timi.server.web.screens.reports :as reports-screen]
     [timi.server.web.screens.time :as time-screen]
@@ -72,10 +73,12 @@
        request
        request)
   (GET "/logout"
-       {session :session}
-       (-> "/"
-           (response/redirect)
-           (assoc :session (dissoc session :identity))))
+       request
+       (-> request
+           (dissoc :session)
+           (generic-screen/get-page
+             {:title "Bye!"
+              :text "You have beeb logged out."})))
   (GET "/user/settings"
        request
        (user-screen/get-settings request))

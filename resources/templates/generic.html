@@ -1,0 +1,12 @@
+{% extends "templates/layout.html" %}
+
+{% block top-nav %}
+{% include "templates/header.html" with active="generic" %}
+{% endblock %}
+
+{% block body %}
+<h2>{{ title }}</h2>
+
+<p>{{ text }}</p>
+
+{% endblock %}
