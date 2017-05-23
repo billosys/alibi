@@ -1,0 +1,25 @@
+{% extends "templates/layout.html" %}
+
+{% block top-nav %}
+{% include "templates/header.html" with active="user" %}
+{% endblock %}
+
+{% block body %}
+<h2>Settings</h2>
+
+<table class="table table-hover table-bordered">
+  <thead>
+    <th>Key</th>
+    <th>Value</th>
+  </thead>
+  <tbody>
+    {% for data in identity %}
+    <tr>
+      <td>{{ data|first|name }}</td>
+      <td>{{ data|last }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
