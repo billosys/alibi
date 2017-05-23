@@ -89,6 +89,27 @@
   :profiles {
     :uberjar {
       :aot [#"timi.server.*" #"timi.config.*"]}
+    :docs {
+      :aot :all
+      :dependencies [[systems.billo/superhero-codox-theme "0.3.0-SNAPSHOT"]]
+      :plugins [
+        [lein-codox "0.10.3"]]}
+    :server-docs {
+      :codox {
+        :project {:name "Tímı"}
+        :themes [:superhero]
+        :output-path "resources/public/static/docs/api/server/current"
+        :doc-paths ["resources/docs/api"]
+        :metadata {:doc/format :markdown}}}
+    :client-docs {
+      :codox {
+        :project {:name "Tímı"}
+        :themes [:superhero]
+        :language :clojurescript
+        :source-paths ["src/cljs"]
+        :output-path "resources/public/static/docs/api/client/current"
+        :doc-paths ["resources/docs/api"]
+        :metadata {:doc/format :markdown}}}
     :dev [{
       :dependencies [
         [binaryage/devtools "0.9.4"]
@@ -149,4 +170,7 @@
       ["compile"]
       ["uberjar"]
       ["cljsbuild" "once"]]
-    "timi-deploy" ["with-profile" "build" "deploy" "clojars"]})
+    "timi-deploy" ["with-profile" "build" "deploy" "clojars"]
+    "timi-server-docs" ["with-profile" "+build,+docs,+server-docs" "codox"]
+    "timi-client-docs" ["with-profile" "+build,+docs,+client-docs" "codox"]
+    "timi-docs" ["do" ["timi-server-docs"] ["timi-client-docs"]]})

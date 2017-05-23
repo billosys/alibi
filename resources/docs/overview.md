@@ -11,7 +11,8 @@ The following docs are available for Tímı:
     * [Time Entry](docs/user/time-entry)
     * [User Settings](docs/user/settings)
 * **DEVELOPMENT**
-    * [API Reference](docs/url) - Codox-generated source code documentation
+    * [Server API Reference](/static/docs/api/server/current/index.html) - Codox-generated documentation from the Clojure source code
+    * [Client API Reference](/static/docs/api/client/current/index.html) - Codox-generated documentation from the ClojureScript source code
 * **DESIGN / UX**
     * [Bootswatch Theme](/static/bootswatch/theme.html)
     * [Bootstrap CSS](/static/bootstrap/css.html)
