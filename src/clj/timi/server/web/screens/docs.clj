@@ -23,5 +23,7 @@
     (get-page request "overview"))
   ([request docs-path]
     (render
-      {:identity (:identity request)}
+      {:identity
+        (merge (get-in request [:session :identity-data])
+               (:identity request))}
       docs-path)))

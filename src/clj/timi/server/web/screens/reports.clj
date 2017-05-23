@@ -11,4 +11,6 @@
 (defn get-page
   [request]
   (render
-    {:identity (:identity request)}))
+      {:identity
+        (merge (get-in request [:session :identity-data])
+               (:identity request))}))

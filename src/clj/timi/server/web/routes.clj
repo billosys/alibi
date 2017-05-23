@@ -7,6 +7,7 @@
     [timi.server.web.screens.projects :as projects-screen]
     [timi.server.web.screens.reports :as reports-screen]
     [timi.server.web.screens.time :as time-screen]
+    [timi.server.web.screens.user :as user-screen]
     [timi.server.infra.date-time :refer [today format-date str->local-date]]))
 
 (defroutes time-routes
@@ -75,6 +76,9 @@
        (-> "/"
            (response/redirect)
            (assoc :session (dissoc session :identity))))
+  (GET "/user/settings"
+       request
+       (user-screen/get-settings request))
   (routes time-routes
           docs-routes
           projects-routes

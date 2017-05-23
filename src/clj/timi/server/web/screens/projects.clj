@@ -24,5 +24,6 @@
   [{{selected-project-id "selected-project-id"} :params :as request}]
   (render
     (default-client-state
-      (:identity request)
+      (merge (get-in request [:session :identity-data])
+             (:identity request))
       (str->int selected-project-id))))

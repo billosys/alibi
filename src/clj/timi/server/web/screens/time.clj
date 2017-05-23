@@ -184,7 +184,8 @@
   [for-date {{selected-task-id "selected-task-id"} :params :as request}]
   (render
     (default-client-state for-date
-      (:identity request)
+      (merge (get-in request [:session :identity-data])
+             (:identity request))
       (str->int selected-task-id))))
 
 (defn activity-graphic
