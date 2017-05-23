@@ -93,7 +93,7 @@
        (let [csrf-token (base64 32)
              query-params {"client_id" client-id
                            "state" csrf-token
-                           "scope" "user:email"}]
+                           "scope" "user"}]
          (-> "%s?%s"
              (format authorization-endpoint (form-encode query-params))
              (redirect)
