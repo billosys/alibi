@@ -5,7 +5,7 @@
     [net.ty.channel :as channel]
     [net.ty.pipeline :as pipeline]
     [timi.config :as config]
-    [timi.server.cli.core : as cli]))
+    [timi.server.cli.core :as cli]))
 
 (def config (config/read-config))
 
