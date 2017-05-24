@@ -1,24 +1,110 @@
 (ns timi.dev
   (:require
-   [clojure.java.io :as io]
-   [figwheel-sidecar.repl-api :as f]))
+    [clojure.core.async :as async]
+    [clojure.java.io :as io]
+    [clojure.pprint :refer [pprint print-table]]
+    [clojure.string :as string]
+    [clojure.tools.namespace.repl :as repl]
+    [clojure.walk :refer [macroexpand-all]]
+    [clojusc.twig :as logger]
+    [com.stuartsierra.component :as component]
+    [figwheel-sidecar.repl-api :as f]
+    [net.tcp :as tcp]
+    [net.ty.channel :as channel]
+    [net.ty.pipeline :as pipeline]
+    [taoensso.timbre :as log]
+    [timi.cli.server :as cli-server]
+    [timi.config :as config]
+    [timi.server.components.core :as components]
+    [timi.server.core :as timi]
+    [trifl.java :refer [show-methods]]))
 
-;; user is a namespace that the Clojure runtime looks for and
-;; loads if its available
+(def config (config/read-config))
 
-;; You can place helper functions in here. This is great for starting
-;; and stopping your webserver and other development services
+(logger/set-level! (get-in config [:repl :log :ns])
+                   (get-in config [:repl :log :level]))
 
-;; The definitions in here will be available if you run "lein repl" or launch a
-;; Clojure repl some other way
+(def system nil)
+(def state :stopped)
 
-;; You have to ensure that the libraries you :require are listed in your dependencies
+(defn init []
+  (if (contains? #{:initialized :started :running} state)
+    (log/error "System has aready been initialized.")
+    (do
+      (alter-var-root #'system
+        (constantly (timi/get-system config)))
+      (alter-var-root #'state (fn [_] :initialized))))
+  state)
 
-;; Once you start down this path
-;; you will probably want to look at
-;; tools.namespace https://github.com/clojure/tools.namespace
-;; and Component https://github.com/stuartsierra/component
 
+(defn deinit []
+  (if (contains? #{:started :running} state)
+    (log/error "System is not stopped; please stop before deinitializing.")
+    (do
+      (alter-var-root #'system (fn [_] nil))
+      (alter-var-root #'state (fn [_] :uninitialized))))
+  state)
+
+(defn start
+  ([]
+    (if (nil? system)
+      (init))
+    (if (contains? #{:started :running} state)
+      (log/error "System has already been started.")
+      (do
+        (alter-var-root #'system component/start)
+        (alter-var-root #'state (fn [_] :started))))
+    state)
+  ([component-key]
+    (alter-var-root #'system
+                    (constantly (components/start system component-key)))))
+
+(defn stop
+  ([]
+    (if (= state :stopped)
+      (log/error "System already stopped.")
+      (do
+        (alter-var-root #'system
+          (fn [s] (when s (component/stop s))))
+        (alter-var-root #'state (fn [_] :stopped))))
+    state)
+  ([component-key]
+    (alter-var-root #'system
+                    (constantly (components/stop system component-key)))))
+
+(defn restart [component-key]
+  (alter-var-root #'system
+                  (constantly (components/restart system component-key))))
+
+(defn run []
+  (if (= state :running)
+    (log/error "System is already running.")
+    (do
+      (if (not (contains? #{:initialized :started :running} state))
+        (init))
+      (if (not= state :started)
+        (start))
+      (alter-var-root
+        #'state (fn [_] :running))))
+  state)
+
+(defn -refresh
+  ([]
+    (repl/refresh))
+  ([& args]
+    (apply #'repl/refresh args)))
+
+(defn refresh
+  "This is essentially an alias for clojure.tools.namespace.repl/refresh."
+  [& args]
+  (if (contains? #{:started :running} state)
+    (stop))
+  (apply -refresh args))
+
+(defn reset []
+  (stop)
+  (deinit)
+  (refresh :after 'timi.dev/run))
 
 (defn fig-start
   "This starts the figwheel server and watch based auto-compiler."
