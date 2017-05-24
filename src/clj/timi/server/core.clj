@@ -11,7 +11,7 @@
     [trifl.java :as java])
   (:gen-class))
 
-(def config (timi.config/read-config))
+(def config (config/read-config))
 
 (logger/set-level! (get-in config [:log :ns])
                    (get-in config [:log :level]))
@@ -20,9 +20,17 @@
   "Used by the ring handler configuration in project.clj."
   (web/app config))
 
+(defn get-system
+  ([]
+    (get-system #'app config))
+  ([config]
+    (get-system (web/app config) config))
+  ([app config]
+    (components/init app config)))
+
 (defn -main
   [& args]
-  (let [system (components/init #'app config)]
+  (let [system (get-system)]
     (log/info "Starting Tímı ...")
     (component/start system)
     ;; Setup interrupt/terminate handling

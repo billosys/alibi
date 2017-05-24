@@ -1,4 +1,4 @@
-(ns timi.cli
+(ns timi.server.cli.old
   (:require
     [clojure.pprint :refer [pprint]]
     [timi.config :as config]

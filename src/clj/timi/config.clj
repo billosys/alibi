@@ -1,6 +1,7 @@
 (ns timi.config
-  (:require [clojure.edn]
-            [clojure.java.io]))
+  (:require
+    [clojure.edn]
+    [clojure.java.io]))
 
 (def config-file (clojure.java.io/resource "config.edn"))
 
