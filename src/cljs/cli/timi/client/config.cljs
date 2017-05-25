@@ -13,7 +13,7 @@
     (read-config "config/local/config.edn"))
   ([filename]
     (->> "utf-8"
-        (.readFileSync fs filename)
-        (cljs.reader/read-string))))
+         (.readFileSync fs filename)
+         (cljs.reader/read-string))))
 
 (def data (read-config))

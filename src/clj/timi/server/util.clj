@@ -18,3 +18,14 @@
   [keyword-str]
   (when (seq keyword-str)
     (keyword (subs keyword-str 1))))
+
+(defn get-version
+  []
+  "[add version info]")
+
+(defn exit
+  ([status]
+    (exit status nil))
+  ([status msg]
+    (when msg (println msg))
+    (System/exit status)))

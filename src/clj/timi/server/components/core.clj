@@ -1,11 +1,15 @@
 (ns timi.server.components.core
   (:require
     [com.stuartsierra.component :as component]
+    [timi.server.components.cli :as cli]
     [timi.server.components.httpd :as httpd]))
 
 (defn init [app config]
   (component/system-map
     :cfg config
+    :cli (component/using
+             (cli/new-server)
+             [:cfg])
     :httpd (component/using
              (httpd/new-server app)
              [:cfg])))

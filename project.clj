@@ -25,6 +25,7 @@
     [org.clojure/clojure "1.8.0"]
     [org.clojure/data.json "0.2.6"]
     [org.clojure/java.jdbc "0.7.0-alpha2"]
+    [org.clojure/tools.cli "0.3.5"]
     [org.webjars/bootstrap-datepicker "1.6.4"]
     [org.webjars/bootswatch-superhero "3.3.7"]
     [org.webjars/font-awesome "4.7.0"]

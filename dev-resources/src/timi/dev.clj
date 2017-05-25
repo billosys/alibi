@@ -13,9 +13,9 @@
     [net.ty.channel :as channel]
     [net.ty.pipeline :as pipeline]
     [taoensso.timbre :as log]
+    [timi.config :as config]
     [timi.server.cli.core :as cli]
     [timi.server.cli.tcp :as cli-server]
-    [timi.config :as config]
     [timi.server.components.core :as components]
     [timi.server.core :as timi]
     [trifl.java :refer [show-methods]]))

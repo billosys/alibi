@@ -9,16 +9,6 @@
 
 (def config (config/read-config))
 
-(defn parse-commands
-  [cmds]
-  (log/info "In parse-commands, got:" cmds)
-  cmds)
-
-(defn run-commands
-  [cmds]
-  (log/info "In run-commands, got:" cmds)
-  cmds)
-
 (defn pipeline
   []
   (pipeline/channel-initializer
@@ -27,9 +17,7 @@
     pipeline/string-encoder
     pipeline/line-frame-encoder
     (pipeline/with-input [ctx msg]
-      (channel/write-and-flush! ctx (-> msg
-                                        (parse-commands)
-                                        (run-commands))))]))
+      (channel/write-and-flush! ctx (cli/run msg)))]))
 
 (defn serve
   ([]
