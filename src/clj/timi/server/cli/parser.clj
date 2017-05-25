@@ -1,31 +1,38 @@
 (ns timi.server.cli.parser
   (:require
     [clojure.string :as string]
+    [taoensso.timbre :as log]
     [timi.server.util :as util]))
 
 (defn error-msg [errors]
-  (str "The following error(s) occurred while attempting to parse your "
-       "command:\n\n"
-       (string/join \newline errors)))
+  (->> errors
+       (string/join \newline)
+       (str "The following error(s) occurred while attempting "
+            "to parse your command:\n\n")))
 
 (defn validate-command
   [valid-commands command]
   ((into #{} valid-commands) command))
 
 (defn validate-args
-  [{:keys [options arguments errors summary]} help-fn valid-commands]
+  [{:keys [options arguments errors summary]} log-fn help-fn valid-commands]
   (let [command (keyword (first arguments))]
     (cond
       (:help options)
-        {:exit-message (help-fn) :ok? true}
+        {:data (help-fn) :options options}
       (:summary options)
-        {:exit-message (println summary) :ok? true}
+        {:data summary :options options}
       (:version options)
-        {:exit-message (util/get-version) :ok? true}
+        {:data (util/get-version) :options options}
+      (:log-level options)
+        (let [log-level (:log-level options)]
+          (log/warn "Setting log level to " log-level)
+          (log-fn log-level)
+          {:data :ok :options options})
       errors
-        {:exit-message (error-msg errors)}
+        {:data (error-msg errors)}
       ;; custom validation on arguments
       (validate-command valid-commands command)
         {:command command :options options}
       :else
-        {:exit-message (help-fn)})))
+        {:data (help-fn) :options options})))

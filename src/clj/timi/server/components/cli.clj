@@ -2,7 +2,8 @@
   (:require
     [com.stuartsierra.component :as component]
     [taoensso.timbre :as log]
-    [timi.server.cli.tcp :as cli-server]))
+    [timi.server.cli.tcp :as cli-server]
+    [trifl.java :as java]))
 
 (defrecord CLIServer []
   component/Lifecycle
@@ -19,11 +20,9 @@
   (stop [component]
     (log/info "Stopping CLI server ...")
     (log/debug "Component keys" (keys component))
-    (if-let [server (:cli component)]
-      (do (log/warn "XXX Implement CLI server shutdown function")
-          (log/debug "Using server object:" server)
-          ;; XXX make shutdown call here
-          ))
+    (when-let [server (:cli component)]
+      (log/debug "Using server object:" server)
+      (server))
     (assoc component :cli nil)))
 
 (defn new-server []

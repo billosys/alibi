@@ -18,12 +18,12 @@
     [timi.server.cli.tcp :as cli-server]
     [timi.server.components.core :as components]
     [timi.server.core :as timi]
+    [timi.server.util :as util]
     [trifl.java :refer [show-methods]]))
 
 (def config (config/read-config))
 
-(logger/set-level! (get-in config [:repl :log :ns])
-                   (get-in config [:repl :log :level]))
+(util/set-log-level config :repl)
 
 (def system nil)
 (def state :stopped)

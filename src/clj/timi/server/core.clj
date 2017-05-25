@@ -8,13 +8,13 @@
     [timi.server.components.core :as components]
     [timi.server.datasource.core :as datasource]
     [timi.server.infra.jdbc-extensions]
+    [timi.server.util :as util]
     [trifl.java :as java])
   (:gen-class))
 
 (def config (config/read-config))
 
-(logger/set-level! (get-in config [:log :ns])
-                   (get-in config [:log :level]))
+(util/set-log-level config :app)
 
 (def app
   "Used by the ring handler configuration in project.clj."

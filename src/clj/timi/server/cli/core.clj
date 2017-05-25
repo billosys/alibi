@@ -2,6 +2,7 @@
   (:require
     [clojure.string :as string]
     [clojure.tools.cli :as cli]
+    [taoensso.timbre :as log]
     [timi.server.cli.parser :as parser]
     [timi.server.util :as util]
     [trifl.docs :as docs]))
@@ -11,35 +12,37 @@
    ["-v" "--version"]
    ["-s" "--summary"]
    ["-l" "--log-level LOG-LEVEL" "Log level for CLI"
-    :default :warn
     :parse-fn #(read-string %)
     :validate [#(contains? #{:debug :info :warn :error :fatal} %)
                "Must be one of :debug :info :warn :error :fatal"]]])
 
 (def valid-commands
   {:help nil
-   :config [:show]
-   :db [:init :dump]
-   :project [:create]
-   :task [:create]})
+   :config [
+     :show]
+   :db [
+     :dump
+     :init]
+   :project [
+     :create]
+   :task [
+     :create]})
 
 (defn help
   "This function generates the output for the `help` options and/or commands."
   []
-  (docs/print-docstring 'timi.server.cli.core 'run))
+  (docs/get-docstring 'timi.server.cli.core 'run))
 
 (defn dispatch
-  [{:keys [command options exit-message ok?]}]
-  (println command)
-  (println options)
-  (println exit-message)
-  (println ok?)
-  (if exit-message
-    (util/exit (if ok? 0 1) exit-message)
+  [{:keys [command options data]}]
+  (log/debug "dispatch command:" command)
+  (log/debug "dispatch options:" options)
+  (log/debug "dispatch data:" data)
+  (or
+    data
     (case command
       :help (do
-              (help)
-              (util/exit 0))
+              (help))
       :config "not implemented"
       :db "not implemented"
       :project "not implemented"
@@ -51,10 +54,10 @@
 
   Options:
   ```
-  -h, --help
-  -v, --version
-  -s, --summary
-  -l, --log-level LOG-LEVEL  :warn  Log level for CLI
+  -h, --help                  Display this help text
+  -v, --version               Current version of Tímı
+  -s, --summary               Get the generated summary
+  -l, --log-level LOG-LEVEL   Set the server-side CLI log level
   ```
   Commands:
   ```
@@ -67,14 +70,15 @@
   For more information on any available options or subcommands for a given
   command, use the `--help` option, e.g.:
   ```
-  timi config --help
+  $ timi config --help
   ```
   "
-  [msg]
+  [config msg]
   (-> msg
       (string/split #"\s")
-      ((fn [x] (println x) x))
       (cli/parse-opts options :in-order true)
-      ((fn [x] (println x) x))
-      (parser/validate-args #'help (keys valid-commands))
+      (parser/validate-args
+        (partial util/set-log-level config :cli-server)
+        #'help
+        (keys valid-commands))
       (dispatch)))
