@@ -16,7 +16,7 @@
 
 (defn args->str
   [args]
-  (str (string/join args) "\n"))
+  (str (string/join " "args) "\n"))
 
 ;;; Callbacks
 

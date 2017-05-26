@@ -12,27 +12,34 @@
 
 (defn validate-command
   [valid-commands command]
+  (log/info "Validating command ...")
+  (log/trace "Valid commands:" valid-commands)
+  (log/trace "Command:" command)
   ((into #{} valid-commands) command))
 
-(defn validate-args
-  [{:keys [options arguments errors summary]} log-fn help-fn valid-commands]
+(defn validate
+  [{:keys [options arguments errors summary] :as parsed}
+   log-fn valid-commands]
+  (log/trace "Parsed main args as" parsed)
+  (log/info "Validating main args ...")
   (let [command (keyword (first arguments))]
     (cond
-      (:help options)
-        {:data (help-fn) :options options}
       (:summary options)
-        {:data summary :options options}
+        (assoc parsed :data summary)
       (:version options)
-        {:data (util/get-version) :options options}
+        (assoc parsed :data (util/get-version))
       (:log-level options)
         (let [log-level (:log-level options)]
           (log/warn "Setting log level to " log-level)
           (log-fn log-level)
-          {:data :ok :options options})
+          (assoc parsed :completed true
+                        :data :ok))
       errors
-        {:data (error-msg errors)}
-      ;; custom validation on arguments
+        (assoc parsed :data (error-msg errors))
       (validate-command valid-commands command)
-        {:command command :options options}
+        (let [[command & subcommands] (vec (map keyword (:arguments parsed)))]
+          (assoc parsed :command command :subcommands (vec subcommands)))
       :else
-        {:data (help-fn) :options options})))
+        (assoc parsed :unsupported true
+                      :data (format "The command '%s' is not supported."
+                                    (name command))))))
