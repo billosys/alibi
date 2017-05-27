@@ -16,7 +16,7 @@
   (log/info "Validating command ...")
   (log/trace "Valid commands:" valid-commands)
   (log/trace "Command:" command)
-  ((into #{} valid-commands) command))
+  ((set valid-commands) command))
 
 (defn validate
   [{:keys [options arguments errors summary] :as parsed}
