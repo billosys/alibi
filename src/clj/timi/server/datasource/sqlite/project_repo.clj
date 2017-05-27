@@ -19,11 +19,16 @@
 
       (and project-id (pos? project-id)) (assoc :id project-id))))
 
+(defn- get-projects [db-spec]
+  (as-> db-spec data
+        (db/query data ["select * from projects"])
+        (map row->project data)))
+
 (defn- get-project [db-spec project-id]
-  (->
-    (db/query db-spec ["select * from projects where id=?" project-id])
-    first
-    row->project))
+  (-> db-spec
+      (db/query ["select * from projects where id=?" project-id])
+      first
+      row->project))
 
 (defn- add! [db-spec project]
   (-> db-spec
@@ -31,12 +36,14 @@
       (insert-id)))
 
 (defn exists? [db-spec project-id]
-  (seq (db/query db-spec ["select id from projects where id=?" project-id])))
+  (-> db-spec
+      (db/query ["select id from projects where id=?" project-id])
+      seq))
 
 (defn new [db-spec]
   (reify
     project/ProjectRepository
+    (-get-all [this] (get-projects db-spec))
     (-get [this project-id] (get-project db-spec project-id))
     (-add! [this project] (add! db-spec project))
     (-exists? [this project-id] (exists? db-spec project-id))))
-

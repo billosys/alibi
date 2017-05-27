@@ -15,7 +15,7 @@
 
   (start [component]
     (log/info "Starting HTTP server ...")
-    (let [http-cfg (get-in component [:cfg :httpd])
+    (let [http-cfg (get-in component [:cfg-mgr :cfg :httpd])
           handler (inject-app ring-handler component)
           server (httpkit/run-server handler http-cfg)]
       (log/debug "Using config:" http-cfg)

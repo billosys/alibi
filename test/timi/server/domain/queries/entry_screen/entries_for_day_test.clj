@@ -2,7 +2,6 @@
   (:require
     [clojure.set :refer [rename-keys]]
     [clojure.test :refer [is]]
-    [timi.config :refer [config]]
     [timi.server.datasource.tools :as db-tools]
     [timi.server.domain.query-handler :refer [handle]]
     [timi.server.infra.date-time :refer [today yesterday]]

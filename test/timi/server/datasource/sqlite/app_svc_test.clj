@@ -1,7 +1,6 @@
 (ns timi.server.datasource.sqlite.app-svc-test
   (:require
     [clojure.test :refer [test-vars deftest is]]
-    [timi.config :refer [config]]
     [timi.server.datasource.sqlite.fixtures :refer [sqlite-fixture]]
     [timi.server.datasource.tools :as db-tools]
     [timi.server.domain.entry-app-svc-test :as entry]

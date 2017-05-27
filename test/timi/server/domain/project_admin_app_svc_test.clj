@@ -1,7 +1,6 @@
 (ns timi.server.domain.project-admin-app-svc-test
   (:require
     [clojure.test :refer [is testing]]
-    [timi.config :refer [config]]
     [timi.server.datasource.tools :as db-tools]
     [timi.server.domain.project :as project]
     [timi.server.domain.project-admin-app-svc :as projects :refer [

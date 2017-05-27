@@ -13,7 +13,6 @@
     [net.ty.channel :as channel]
     [net.ty.pipeline :as pipeline]
     [taoensso.timbre :as log]
-    [timi.config :as config]
     [timi.server.cli.core :as cli]
     [timi.server.cli.tcp :as cli-server]
     [timi.server.components.core :as components]
@@ -21,19 +20,19 @@
     [timi.server.util :as util]
     [trifl.java :refer [show-methods]]))
 
-(def config (config/read-config))
-
-(util/set-log-level config :repl)
-
 (def system nil)
 (def state :stopped)
+
+;; Set up default logging here because the system hasn't had a chance to
+;; it yet; once the configuration is available, the logger will re-configure.
+(logger/set-level! 'timi :info)
 
 (defn init []
   (if (contains? #{:initialized :started :running} state)
     (log/error "System has aready been initialized.")
     (do
       (alter-var-root #'system
-        (constantly (timi/get-system config)))
+        (constantly (timi/get-system)))
       (alter-var-root #'state (fn [_] :initialized))))
   state)
 

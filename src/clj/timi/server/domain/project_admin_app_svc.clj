@@ -1,7 +1,14 @@
 (ns timi.server.domain.project-admin-app-svc
   (:require
-    [timi.server.domain.project :as project]))
+    [timi.server.domain.project :as project])
+  (:refer-clojure :exclude [get]))
 
-(defn new-project! [cmd]
-  (let [project (project/new-project cmd)]
-    (project/add! project)))
+(defn new-project!
+  [cmd]
+  (-> cmd
+      (project/new-project)
+      (project/add!)))
+
+(defn get
+  []
+  (project/get-all))

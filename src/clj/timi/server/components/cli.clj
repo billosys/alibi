@@ -2,15 +2,14 @@
   (:require
     [com.stuartsierra.component :as component]
     [taoensso.timbre :as log]
-    [timi.server.cli.tcp :as cli-server]
-    [trifl.java :as java]))
+    [timi.server.cli.tcp :as cli-server]))
 
 (defrecord CLIServer []
   component/Lifecycle
 
   (start [component]
     (log/info "Starting CLI server ...")
-    (let [cfg (get-in component [:cfg])
+    (let [cfg (get-in component [:cfg-mgr :cfg])
           server (cli-server/serve cfg)]
       (log/trace "Using config:" cfg)
       (log/debug "Component keys:" (keys component))

@@ -1,12 +1,14 @@
 (ns timi.server.domain.project
-  (:refer-clojure :exclude [get])
   (:require
     [clojure.set :refer [rename-keys]]
-    [timi.server.domain.billing-method :refer [billing-method?]]))
+    [timi.server.domain.billing-method :refer [billing-method?]])
+  (:refer-clojure :exclude [get]))
 
 (defrecord Project [project-id project-name billing-method])
 
-(defn project? [p] (instance? Project p))
+(defn project?
+  [p]
+  (instance? Project p))
 
 (defn hydrate-project
   [{:keys [project-id billing-method] :as project}]
@@ -23,20 +25,29 @@
 
 (def ^:private ^:dynamic *repo-implementation*)
 
-(defmacro with-repo-impl [impl & body]
+(defmacro with-repo-impl
+  [impl & body]
   `(binding [*repo-implementation* ~impl]
      ~@body))
 
 (defprotocol ProjectRepository
+  (-get-all [this])
   (-get [this project-id])
   (-add! [this project])
   (-exists? [this project-id]))
 
-(defn get [project-id]
+(defn get-all
+  []
+  (-get-all *repo-implementation*))
+
+(defn get
+  [project-id]
   (-get *repo-implementation* project-id))
 
-(defn add! [project]
+(defn add!
+  [project]
   (-add! *repo-implementation* project))
 
-(defn exists? [project-id]
+(defn exists?
+  [project-id]
   (-exists? *repo-implementation* project-id))

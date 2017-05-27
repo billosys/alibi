@@ -4,10 +4,7 @@
     [net.ty.channel :as channel]
     [net.ty.pipeline :as pipeline]
     [taoensso.timbre :as log]
-    [timi.config :as config]
     [timi.server.cli.core :as cli]))
-
-(def config (config/read-config))
 
 (defn pipeline
   [config]
@@ -20,14 +17,8 @@
       (channel/write-and-flush! ctx (cli/run config msg)))]))
 
 (defn serve
-  ([]
-    (serve config))
   ([config]
     (tcp/server
       {:handler (pipeline config)}
       (get-in config [:cli :server :host])
       (get-in config [:cli :server :port]))))
-
-(defn -main
-  [& _]
-  (serve))

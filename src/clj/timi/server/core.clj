@@ -2,8 +2,6 @@
   (:require
     [clojusc.twig :as logger]
     [com.stuartsierra.component :as component]
-    [taoensso.timbre :as log]
-    [timi.config :as config]
     [timi.server.web.core :as web]
     [timi.server.components.core :as components]
     [timi.server.datasource.core :as datasource]
@@ -12,26 +10,18 @@
     [trifl.java :as java])
   (:gen-class))
 
-(def config (config/read-config))
-
-(util/set-log-level config :app)
-
-(def app
-  "Used by the ring handler configuration in project.clj."
-  (web/app config))
-
 (defn get-system
   ([]
-    (get-system #'app config))
-  ([config]
-    (get-system (web/app config) config))
-  ([app config]
-    (components/init app config)))
+    (get-system #'web/app))
+  ([app]
+    (components/init app)))
 
 (defn -main
   [& args]
+  ;; Set up default logging here because the system hasn't had a chance to
+  ;; it yet; once the configuration is available, the logger will re-configure.
+  (logger/set-level! 'timi :info)
   (let [system (get-system)]
-    (log/info "Starting Tímı ...")
     (component/start system)
     ;; Setup interrupt/terminate handling
     (java/add-shutdown-handler #(component/stop system))))

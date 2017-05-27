@@ -5,6 +5,8 @@
     [taoensso.timbre :as log]
     [timi.server.cli.commands.config :as config-cmd]
     [timi.server.cli.commands.db :as db-cmd]
+    [timi.server.cli.commands.project :as project-cmd]
+    [timi.server.cli.commands.task :as task-cmd]
     [timi.server.cli.parser :as parser]
     [timi.server.util :as util]
     [trifl.docs :as docs]))
@@ -63,7 +65,7 @@
       :help (help)
       :config (config-cmd/run config parsed)
       :db (db-cmd/run config parsed)
-      :project "not implemented"
+      :project (project-cmd/run config parsed)
       :task "not implemented")))
 
 ;; Note that the option summary and commands are "hard-documented" here due
