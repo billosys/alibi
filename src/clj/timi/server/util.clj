@@ -1,5 +1,6 @@
 (ns timi.server.util
   (:require
+    [clojure.java.io :as io]
     [clojusc.twig :as logger]))
 
 (defn str->decimal
@@ -48,4 +49,6 @@
       :cli-server (set-log-level-type config [:cli :server :log] level)
       :repl (set-log-level-type config [:repl :log] level))))
 
-
+(defn get-banner
+  []
+  (slurp (io/resource "text/banner.txt")))

@@ -183,4 +183,11 @@
     "timi-deploy" ["with-profile" "build" "deploy" "clojars"]
     "timi-server-docs" ["with-profile" "+build,+docs,+server-docs" "codox"]
     "timi-client-docs" ["with-profile" "+build,+docs,+client-docs" "codox"]
-    "timi-docs" ["do" ["timi-server-docs"] ["timi-client-docs"]]})
+    "timi-docs" ["do" ["timi-server-docs"] ["timi-client-docs"]]}
+  :repl-options {
+    :prompt (fn [ns] (str "\u001B[35m[\u001B[34m"
+                          ns
+                          "\u001B[35m]\u001B[33m λ:\u001B[m "))
+    :welcome ~(do
+                (println (slurp "resources/text/banner.txt"))
+                (println (slurp "resources/text/loading.txt")))})

@@ -1,0 +1,3 @@
+When the REPL finishes loading, type (start)
+
+Loading Clojure code ...

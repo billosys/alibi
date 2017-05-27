@@ -13,6 +13,7 @@
 
 (def options
   [["-h" "--help"]
+   ["-b" "--banner"]
    ["-v" "--version"]
    ["-s" "--summary"]
    ["-l" "--log-level LOG-LEVEL" "Log level for CLI"
@@ -53,6 +54,8 @@
         data
       (:summary options)
         data
+      (:banner options)
+        data
       (:unsupported parsed)
         (format "\nERROR: %s\n\n%s" data (help))
       (:completed parsed)
@@ -80,10 +83,11 @@
 
   Options:
   ```
+  -b, --banner                Show the Tímı banner
   -h, --help                  Display this help text
-  -v, --version               Current version of Tímı
-  -s, --summary               Get the generated summary
   -l, --log-level=LOG-LEVEL   Set the server-side CLI log level
+  -s, --summary               Get the generated summary
+  -v, --version               Current version of Tímı
   ```
   Commands:
   ```

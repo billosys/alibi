@@ -31,6 +31,8 @@
         (assoc parsed :data (util/get-version))
       (:help options)
         parsed
+      (:banner options)
+        (assoc parsed :data (util/get-banner))
       (:log-level options)
         (let [log-level (:log-level options)]
           (log/warn "Setting log level to " log-level)

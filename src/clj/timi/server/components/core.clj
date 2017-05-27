@@ -4,6 +4,7 @@
     [taoensso.timbre :as log]
     [timi.server.components.cli :as cli]
     [timi.server.components.config :as config]
+    [timi.server.components.db :as db]
     [timi.server.components.httpd :as httpd]
     [timi.server.components.logging :as logging]))
 
@@ -15,12 +16,15 @@
     :logger (component/using
              (logging/new-logger)
              [:cfg-mgr])
+    :db (component/using
+             (db/new-db-manager)
+             [:cfg-mgr :logger])
     :cli (component/using
              (cli/new-server)
-             [:cfg-mgr :logger])
+             [:cfg-mgr :logger :db])
     :httpd (component/using
              (httpd/new-server app)
-             [:cfg-mgr :logger])))
+             [:cfg-mgr :logger :db])))
 
 (defn stop [system component-key]
   (->> system
