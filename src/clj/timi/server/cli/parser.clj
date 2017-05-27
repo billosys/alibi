@@ -6,8 +6,9 @@
 
 (defn error-msg [errors]
   (->> errors
+       (map #(str "\t" %))
        (string/join \newline)
-       (str "The following error(s) occurred while attempting "
+       (str "\nThe following error(s) occurred while attempting "
             "to parse your command:\n\n")))
 
 (defn validate-command
@@ -28,6 +29,8 @@
         (assoc parsed :data summary)
       (:version options)
         (assoc parsed :data (util/get-version))
+      (:help options)
+        parsed
       (:log-level options)
         (let [log-level (:log-level options)]
           (log/warn "Setting log level to " log-level)

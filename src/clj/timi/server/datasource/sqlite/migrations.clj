@@ -1,8 +1,9 @@
 (ns timi.server.datasource.sqlite.migrations
   (:require
-    [clojure.java.jdbc :as db]
     [clojure.edn :as edn]
-    [clojure.java.io :as io]))
+    [clojure.java.io :as io]
+    [clojure.java.jdbc :as db]
+    [taoensso.timbre :as log]))
 
 (defn- get-migrations [path]
   (some->> (io/resource path)
@@ -29,9 +30,12 @@
       (db/execute! db stmt))))
 
 (defn apply-migrations! [db migrations-path]
+  (log/debug "Preparing to perform database migrations ...")
+  (log/debug "\tUsing path:" migrations-path)
   (let [latest-migration (get-latest-migration db)]
     (loop [[mig & more] (get-migrations migrations-path)]
       (when mig
+        (log/debugf "\tApplying migration %s ..." mig)
         (if (and latest-migration
                  (<= (compare mig (:filename latest-migration)) 0))
           (recur more)

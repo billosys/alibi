@@ -85,7 +85,7 @@
         {:id "cli"
          :source-paths ["src/cljs/cli"]
          :compiler {
-           :output-to "bin/timi-cli.js"
+           :output-to "bin/timi"
            :output-dir "target/cljs/cli"
            :optimizations :simple
            :pretty-print true
@@ -162,12 +162,6 @@
   ;; XXX Note: most (if not all) of the aliases are going to change or go away
   ;;     once we switch to the new CLI
   :aliases {
-    "timi-help" [
-      "with-profile" "+local"
-      "run" "-m" "timi.cli"]
-    "timi-init" [
-      "with-profile" "+local"
-      "run" "-m" "timi.cli" "sqlite" "create-db" :filename]
     "timi-create-project" [
       "with-profile" "+local"
       "run" "-m" "timi.cli" "projects" "create" :name]
@@ -186,7 +180,6 @@
       ["uberjar"]
       ["cljsbuild" "once"]
       ["cljsbuild" "once" "cli"]]
-    "timi-build-cli" ["with-profile" "+build" "cljsbuild" "once" "cli"]
     "timi-deploy" ["with-profile" "build" "deploy" "clojars"]
     "timi-server-docs" ["with-profile" "+build,+docs,+server-docs" "codox"]
     "timi-client-docs" ["with-profile" "+build,+docs,+client-docs" "codox"]

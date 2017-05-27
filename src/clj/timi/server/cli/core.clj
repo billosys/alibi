@@ -4,6 +4,7 @@
     [clojure.tools.cli :as cli]
     [taoensso.timbre :as log]
     [timi.server.cli.commands.config :as config-cmd]
+    [timi.server.cli.commands.db :as db-cmd]
     [timi.server.cli.parser :as parser]
     [timi.server.util :as util]
     [trifl.docs :as docs]))
@@ -23,11 +24,14 @@
      :help true
      :show true}
    :db {
+     :help true
      :dump true
      :init true}
    :project {
+     :help true
      :create true}
    :task {
+     :help true
      :create true}})
 
 (defn help
@@ -38,6 +42,7 @@
 (defn dispatch
   [config {:keys [options arguments errors data command] :as parsed}]
   (log/trace "dispatch keys:" parsed)
+  (log/trace "options:" options)
   (or
     (cond
       (:help options)
@@ -57,7 +62,7 @@
     (case command
       :help (help)
       :config (config-cmd/run config parsed)
-      :db "not implemented"
+      :db (db-cmd/run config parsed)
       :project "not implemented"
       :task "not implemented")))
 
