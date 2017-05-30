@@ -2,7 +2,7 @@
   (:require
     [com.stuartsierra.component :as component]
     [taoensso.timbre :as log]
-    [timi.server.cli.tcp :as cli-server]))
+    [timi.server.cli.udp :as cli-server]))
 
 (defrecord CLIServer []
   component/Lifecycle
