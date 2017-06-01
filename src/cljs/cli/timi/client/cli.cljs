@@ -5,7 +5,7 @@
     [clojusc.twig :as logger]
     [taoensso.timbre :as log]
     [timi.client.config :as config]
-    [timi.client.tcp :as tcp]))
+    [timi.client.udp :as udp]))
 
 ;;; CLI setup and functions
 
@@ -18,29 +18,31 @@
   [args]
   (str (string/join " "args) "\n"))
 
-;;; Callbacks
+(defn wait
+  []
+  (js/setTimeout #(log/info "UDP client timed out.")
+                 3000))
 
-(defn handle-connect
-  [client data]
-  (log/debug "Connected.")
-  (tcp/send client data))
+;;; UDP Callback
 
 (defn handle-receive
   [client data]
   (let [buffer (js/Buffer. data)]
     (log/debug "Received data:" data)
-    (tcp/disconnect client)
+    (udp/close client)
     (log/debug "Disconnected.")
-    (println (str data))))
+    (println (str data))
+    (.exit node/process)))
 
 ;;; Main
 
 (defn -main
   [& args]
   (log/debug "Got args:" args)
-  (let [client (tcp/connect config/data)
+  (let [client (udp/client)
         data (args->str args)]
-    (tcp/on-connect client #(handle-connect client data))
-    (tcp/on-receive client #(handle-receive client %))))
+    (udp/on-receive client #(handle-receive client %))
+    (udp/send client config/data data)
+    (wait)))
 
 (set! *main-cli-fn* -main)
