@@ -1,0 +1,54 @@
+# file: timi-auto-complete
+# timi (sub)command-completion
+
+TOP_LEVEL='config db -h -l -s -v --help --log-level --summary --version'
+TOP_DASHED='-b -h -l -v --banner --help --log-level --summary --version'
+CONFIG_LEVEL='show help'
+DB_LEVEL='help init'
+
+_timi () {
+    local cur prev
+
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    case ${COMP_CWORD} in
+        1)
+            case ${cur} in
+                -*)
+                    COMPREPLY=($(compgen -W "${TOP_DASHED}" -- $cur ))
+                    ;;
+                 *)
+                    COMPREPLY=($(compgen -W "${TOP_LEVEL}" -- ${cur}))
+                    ;;
+            esac
+            ;;
+        2)
+            case ${prev} in
+                config)
+                    COMPREPLY=($(compgen -W "${CONFIG_LEVEL}" ${cur}))
+                    ;;
+                db)
+                    COMPREPLY=($(compgen -W "${DB_LEVEL}" ${cur}))
+                    ;;
+            esac
+            ;;
+        ## If a third level of parsing is needed, uncomment below
+        # 3)
+        #   case ${prev} in
+        #         show)
+        #             COMPREPLY=($(compgen -W "${SHOW_LEVEL}" ${cur}))
+        #             ;;
+        #     esac
+        #     ;;
+        *)
+            COMPREPLY=()
+            ;;
+    esac
+    return 0
+}
+
+complete -F _timi timi
+complete -F _timi ./bin/timi
+complete -F _timi `which timi`
+#
