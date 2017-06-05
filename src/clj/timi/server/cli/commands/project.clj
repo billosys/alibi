@@ -14,34 +14,14 @@
     (clojure.lang PersistentHashMap)
     (java.lang Object String)))
 
-(def options
-  ;; Note that any options added here need to be named differently than those
-  ;; in timi.server.cli.core/options.
-  [])
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Supporting Constants/Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn validate-subcommand
-  [subcommand]
-  (log/info "Validating subcommand ...")
-  (log/trace "Command:" subcommand)
-  (#{:help :list :create} subcommand))
-
-(defn validate-billing-method
-  [method]
-  (log/info "Validating billing method ...")
-  (log/trace "method:" method)
-  (#{:fixed-price :hourly :overhead} method))
-
-(defn help
-  "This function generates the output for the `help` options and/or commands."
-  []
-  (docs/get-docstring 'timi.server.cli.commands.project 'run))
-
-(defn handle-unknown-subcommand
-  [subcommand]
-  (let [msg (format "The subcommand '%s' is not supported."
-                    (name subcommand))]
-    (log/error msg)
-    (format "\nERROR: %s\n\n%s" msg (help))))
+(def billing-methods
+  {:fixed-price true
+   :hourly true
+   :overhead true})
 
 (defn list-projects
   [config]
@@ -52,27 +32,45 @@
   [config project-name billing-method]
   (log/info "Creating new project %s with billing method %s ..."
             project-name billing-method)
-  ;; XXX use the validate-billing-method function above
+  ;; XXX use validation for billing methods ...
+  ;; (parser/validate-member billing-methods billing-method)
   (let [cmd {:project-name project-name
              :billing-method billing-method}
         project-id (projects/new-project! cmd)]
     (log/debug "Created project.")
     (str ":project-id " project-id)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Tímı CLI API   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def options
+  ;; Note that any options added here need to be named differently than those
+  ;; in timi.server.cli.core/options.
+  [])
+
+(defn help
+  "This function generates the output for the `help` options and/or commands."
+  []
+  (docs/get-docstring 'timi.server.cli.commands.project 'run))
+
 (defn dispatch
-  [config {:keys [options arguments errors data subcommands]}]
-  (let [subcommand (or (first subcommands) :help)]
+  "Dispatch on the project subcommands."
+  [config valid-subcommands
+   {:keys [options arguments errors data subcommands]}]
+  (let [subcommand (parser/get-default-subcommand valid-subcommands
+                                                  (first subcommands))]
     (log/infof "Running '%s' subcommand ..." subcommand)
     (log/trace "Using config:" config)
     (log/debug "dispatch subcommands:" subcommands)
     (log/debug "dispatch arguments:" arguments)
-    (case (validate-subcommand subcommand)
+    (case subcommand
       :help (help)
       :list (list-projects config)
       :create (create-project config
                 (nth arguments 2 nil)
                 (nth subcommands 2 :hourly))
-      (handle-unknown-subcommand subcommand))))
+      (parser/handle-unknown-subcommand subcommand help))))
 
 (defn run
   "
@@ -83,7 +81,6 @@
   help                          Display this help text
   list                          List all projects
   create NAME [BILLING-METHOD]  Create a new project to track
-  ```
-  "
-  [config parsed]
-  (dispatch config parsed))
+  ```"
+  [config valid-subcommands parsed]
+  (dispatch config (keys valid-subcommands) parsed))

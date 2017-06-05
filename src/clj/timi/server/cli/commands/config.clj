@@ -8,21 +8,9 @@
     [timi.server.util :as util]
     [trifl.docs :as docs]))
 
-(def options
-  ;; Note that any options added here need to be named differently than those
-  ;; in timi.server.cli.core/options.
-  [])
-
-(defn validate-subcommand
-  [subcommand]
-  (log/info "Validating subcommand ...")
-  (log/trace "Command:" subcommand)
-  (#{:help :show} subcommand))
-
-(defn help
-  "This function generates the output for the `help` options and/or commands."
-  []
-  (docs/get-docstring 'timi.server.cli.commands.config 'run))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Supporting Constants/Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn show-config
   [config]
@@ -30,22 +18,34 @@
       (pprint)
       (with-out-str)))
 
-(defn handle-unknown-subcommand
-  [subcommand]
-  (let [msg (format "The subcommand '%s' is not supported."
-                    (name subcommand))]
-    (log/error msg)
-    (format "\nERROR: %s\n\n%s" msg (help))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Tímı CLI API   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def options
+  ;; Note that any options added here need to be named differently than those
+  ;; in timi.server.cli.core/options.
+  [])
+
+(defn help
+  "This function generates the output for the `help` options and/or commands."
+  []
+  (docs/get-docstring 'timi.server.cli.commands.config 'run))
 
 (defn dispatch
-  [config {:keys [options arguments errors data subcommands]}]
-  (let [subcommand (or (first subcommands) :show)]
+  "Dispatch on the config subcommands."
+  [config valid-subcommands
+   {:keys [options arguments errors data subcommands]}]
+  (log/trace "Valid subcommands:" valid-subcommands)
+  (let [subcommand (parser/get-default-subcommand valid-subcommands
+                                                  (first subcommands)
+                                                  :show)]
     (log/infof "Running '%s' subcommand ..." subcommand)
     (log/debug "dispatch subcommands:" subcommands)
-    (case (validate-subcommand subcommand)
+    (case subcommand
       :help (help)
       :show (show-config config)
-      (handle-unknown-subcommand subcommand))))
+      (parser/handle-unknown-subcommand subcommand help))))
 
 (defn run
   "
@@ -55,7 +55,6 @@
   ```
   help    Display this help text
   show    Display the complete current configuration values
-  ```
-  "
-  [config parsed]
-  (dispatch config parsed))
+  ```"
+  [config valid-subcommands parsed]
+  (dispatch config (keys valid-subcommands) parsed))

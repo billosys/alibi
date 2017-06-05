@@ -12,28 +12,9 @@
     (clojure.lang PersistentHashMap)
     (java.lang Object String)))
 
-(def options
-  ;; Note that any options added here need to be named differently than those
-  ;; in timi.server.cli.core/options.
-  [])
-
-(defn validate-subcommand
-  [subcommand]
-  (log/info "Validating subcommand ...")
-  (log/trace "Command:" subcommand)
-  (#{:help :init :dump} subcommand))
-
-(defn help
-  "This function generates the output for the `help` options and/or commands."
-  []
-  (docs/get-docstring 'timi.server.cli.commands.db 'run))
-
-(defn handle-unknown-subcommand
-  [subcommand]
-  (let [msg (format "The subcommand '%s' is not supported."
-                    (name subcommand))]
-    (log/error msg)
-    (format "\nERROR: %s\n\n%s" msg (help))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Supporting Constants/Functions   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; XXX this will be generalized later (and moved) when different db backends
 ;;      are supported
@@ -87,18 +68,35 @@
       (init-db (get-connection-data config))
       (init-db (get-connection-data filename)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;   Tímı CLI API   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def options
+  ;; Note that any options added here need to be named differently than those
+  ;; in timi.server.cli.core/options.
+  [])
+
+(defn help
+  "This function generates the output for the `help` options and/or commands."
+  []
+  (docs/get-docstring 'timi.server.cli.commands.db 'run))
+
 (defn dispatch
-  [config {:keys [options arguments errors data subcommands]}]
-  (let [subcommand (or (first subcommands) :help)]
+  "Dispatch on the db subcommands."
+  [config valid-subcommands
+   {:keys [options arguments errors data subcommands]}]
+  (let [subcommand (parser/get-default-subcommand valid-subcommands
+                                                  (first subcommands))]
     (log/infof "Running '%s' subcommand ..." subcommand)
     (log/trace "Using config:" config)
     (log/debug "dispatch subcommands:" subcommands)
     (log/debug "dispatch arguments:" arguments)
-    (case (validate-subcommand subcommand)
+    (case subcommand
       :help (help)
       :dump :not-implemented
       :init (init-db config (nth arguments 2 nil))
-      (handle-unknown-subcommand subcommand))))
+      (parser/handle-unknown-subcommand subcommand help))))
 
 (defn run
   "
@@ -111,7 +109,6 @@
   init CONNECTION-STRING    Initialize new app storage with the given
                             connection string (for sqlite this is just
                             a filename)
-  ```
-  "
-  [config parsed]
-  (dispatch config parsed))
+  ```"
+  [config valid-subcommands parsed]
+  (dispatch config (keys valid-subcommands) parsed))
