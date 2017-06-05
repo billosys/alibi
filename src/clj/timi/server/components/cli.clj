@@ -12,13 +12,13 @@
     (let [cfg (get-in component [:cfg-mgr :cfg])
           server (cli-server/serve cfg)]
       (log/trace "Using config:" cfg)
-      (log/debug "Component keys:" (keys component))
+      (log/trace "Component keys:" (keys component))
       (log/debug "Successfully created server:" server)
       (assoc component :cli server)))
 
   (stop [component]
     (log/info "Stopping CLI server ...")
-    (log/debug "Component keys" (keys component))
+    (log/trace "Component keys" (keys component))
     (when-let [server (:cli component)]
       (log/debug "Using server object:" server)
       (server))

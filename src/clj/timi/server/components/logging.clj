@@ -12,13 +12,13 @@
     (let [cfg (get-in component [:cfg-mgr :cfg])]
       (util/set-log-level cfg :app)
       (log/trace "Using config:" cfg)
-      (log/debug "Component keys:" (keys component))
+      (log/trace "Component keys:" (keys component))
       (log/debug "Successfully created logger.")
       component))
 
   (stop [component]
     (log/info "Stopping logger ...")
-    (log/debug "Component keys" (keys component))
+    (log/trace "Component keys" (keys component))
     component))
 
 (defn new-logger []

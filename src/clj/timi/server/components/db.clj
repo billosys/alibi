@@ -20,7 +20,7 @@
           conn (jdbc/get-connection db-spec)]
       (log/trace "Using config:" cfg)
       (log/debug "Using db spec:" db-spec)
-      (log/debug "Component keys:" (keys component))
+      (log/trace "Component keys:" (keys component))
       (log/debug "Successfully created database manager.")
       (assoc component
              :db-spec db-spec
@@ -28,7 +28,7 @@
 
   (stop [component]
     (log/info "Stopping database manager ...")
-    (log/debug "Component keys" (keys component))
+    (log/trace "Component keys" (keys component))
     component))
 
 (defn new-db-manager []

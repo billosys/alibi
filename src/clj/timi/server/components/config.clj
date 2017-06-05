@@ -26,13 +26,13 @@
     (log/info "Starting configuration manager ...")
     (let [cfg (read-config config-file)]
       (log/trace "Using config:" cfg)
-      (log/debug "Component keys:" (keys component))
+      (log/trace "Component keys:" (keys component))
       (log/debug "Successfully created manager.")
       (assoc component :cfg cfg)))
 
   (stop [component]
     (log/info "Stopping configuration manager ...")
-    (log/debug "Component keys" (keys component))
+    (log/trace "Component keys" (keys component))
     (assoc component :cfg nil)))
 
 (defn new-config-manager []
