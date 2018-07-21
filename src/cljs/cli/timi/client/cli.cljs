@@ -1,11 +1,12 @@
 (ns timi.client.cli
   (:require
+    [billo.udp.client.core :as udp]
+    [billo.udp.client.util :as util]
     [cljs.nodejs :as node]
     [clojure.string :as string]
     [clojusc.twig :as logger]
     [taoensso.timbre :as log]
-    [timi.client.config :as config]
-    [timi.client.udp :as udp]))
+    [timi.client.config :as config]))
 
 ;;; CLI setup and functions
 
@@ -14,14 +15,6 @@
 (logger/set-level! (get-in config/data [:cli :client :log :ns])
                    (get-in config/data [:cli :client :log :level]))
 
-(defn args->str
-  [args]
-  (str (string/join " "args) "\n"))
-
-(defn wait
-  []
-  (js/setTimeout #(log/info "UDP client timed out.")
-                 3000))
 
 ;;; UDP Callback
 
@@ -40,9 +33,10 @@
   [& args]
   (log/debug "Got args:" args)
   (let [client (udp/client)
-        data (args->str args)]
+        port (get-in config/data [:cli :server :port])
+        data (util/args->str args)]
     (udp/on-receive client #(handle-receive client %))
-    (udp/send client config/data data)
-    (wait)))
+    (udp/send client port data)
+    (util/wait)))
 
 (set! *main-cli-fn* -main)

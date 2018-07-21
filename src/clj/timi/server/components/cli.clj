@@ -1,6 +1,6 @@
 (ns timi.server.components.cli
   (:require
-    [billo.udp.server :as cli-server]
+    [billo.udp.server.core :as cli-server]
     [com.stuartsierra.component :as component]
     [taoensso.timbre :as log]
     [timi.server.cli.core :as cli]))
@@ -18,7 +18,7 @@
           options {:port (get-in cfg [:cli :server :port])
                    :parser-fn cli-parser
                    :parser-opts {:config cfg}}
-          server (cli-server/run cfg opts)]
+          server (cli-server/run options)]
       (log/trace "Using config:" cfg)
       (log/trace "Using server options:" options)
       (log/trace "Component keys:" (keys component))

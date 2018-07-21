@@ -2,8 +2,7 @@
   (:require
     [clojure.string :as string]
     [clojusc.twig :as logger]
-    [taoensso.timbre :as log]
-    [timi.client.tcp :as tcp]))
+    [taoensso.timbre :as log]))
 
 (def fs (js/require "fs"))
 

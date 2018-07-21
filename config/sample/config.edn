@@ -35,5 +35,5 @@
        :ns [timi.server.cli]}}
    :client {
      :log {
-       :level :info
+       :level :debug
        :ns [timi.client.cli]}}}}

@@ -14,7 +14,6 @@
     [taoensso.timbre :as log]
     [timi.server.cli.core :as cli]
     [timi.server.cli.parser :as cli-parser]
-    [timi.server.cli.udp :as cli-server]
     [timi.server.components.core :as components]
     [timi.server.core :as timi]
     [timi.server.util :as util]

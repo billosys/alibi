@@ -37,7 +37,7 @@
     [ring/ring-codec "1.0.1"]
     [ring/ring-core "1.6.1"]
     [selmer "1.10.7" :exclusions [joda-time]]
-    [systems.billo/async-udp "0.1.0"]
+    [systems.billo/async-udp "0.1.0-SNAPSHOT"]
     [systems.billo/inet-address "0.1.1"]
     [systems.billo/sockets "0.1.1"]]
   :plugins [
@@ -174,6 +174,7 @@
     "timi-figwheel" ["with-profile" "+local" "figwheel"]
     "check-deps" ["with-profile" "+test" "ancient" "check" "all"]
     "lint" ["with-profile" "+test" "kibit"]
+    "timi-build-cli" ["cljsbuild" "once" "cli"]
     "timi-build" ["with-profile" "+build" "do"
       ;["check-deps"] XXX enable once clj-http 3.5.x is working with Tímı
       ["lint"]
@@ -181,7 +182,7 @@
       ["compile"]
       ["uberjar"]
       ["cljsbuild" "once"]
-      ["cljsbuild" "once" "cli"]]
+      ["timi-build-cli"]]
     "timi-deploy" ["with-profile" "build" "deploy" "clojars"]
     "timi-server-docs" ["with-profile" "+build,+docs,+server-docs" "codox"]
     "timi-client-docs" ["with-profile" "+build,+docs,+client-docs" "codox"]
